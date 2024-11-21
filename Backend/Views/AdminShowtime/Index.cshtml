@@ -1,0 +1,31 @@
+<table class="table table-hover">
+    <thead>
+        <tr>
+            <th>#</th>
+            <th>Phim</th>
+            <th>Rạp</th>
+            <th>Màn hình</th>
+            <th>Thời gian</th>
+            <th>Thao tác</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var showtime in Model)
+        {
+            <tr>
+                <td>@showtime.Id</td>
+                <td>@showtime.Movie.Title</td>
+                <td>@showtime.Theatre.Name</td>
+                <td>@showtime.Screen</td>
+                <td>@showtime.StartTime.ToString("dd/MM/yyyy HH:mm")</td>
+                <td>
+                    <a href="@Url.Action("Edit", new { id = showtime.Id })" class="btn btn-warning btn-sm">Sửa</a>
+                    <form asp-action="Delete" method="post" class="d-inline">
+                        <input type="hidden" name="id" value="@showtime.Id" />
+                        <button type="submit" class="btn btn-danger btn-sm">Xóa</button>
+                    </form>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

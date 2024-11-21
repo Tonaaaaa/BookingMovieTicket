@@ -1,0 +1,77 @@
+@model Backend.Models.Movie
+
+<h2 class="text-center mt-4">Thêm Phim Mới</h2>
+
+<div class="container mt-4">
+    <form asp-action="Create" method="post" class="border p-4 rounded shadow-sm bg-light">
+        @Html.AntiForgeryToken()
+
+        <!-- Tên phim, Ngày phát hành, Thời lượng -->
+        <div class="row g-3">
+            <div class="col-md-4">
+                <label asp-for="Title" class="form-label">Tên phim</label>
+                <input asp-for="Title" class="form-control" placeholder="Nhập tên phim..." />
+                <span asp-validation-for="Title" class="text-danger"></span>
+            </div>
+            <div class="col-md-4">
+                <label asp-for="ReleaseDate" class="form-label">Ngày phát hành</label>
+                <input type="date" asp-for="ReleaseDate" class="form-control" />
+                <span asp-validation-for="ReleaseDate" class="text-danger"></span>
+            </div>
+            <div class="col-md-4">
+                <label asp-for="DurationInMinutes" class="form-label">Thời lượng (phút)</label>
+                <input asp-for="DurationInMinutes" class="form-control" placeholder="Nhập thời lượng phim..." />
+                <span asp-validation-for="DurationInMinutes" class="text-danger"></span>
+                
+            </div>
+        </div>
+
+        <!-- Banner, Diễn viên, Thể loại -->
+        <div class="row g-3 mt-3">
+            <div class="col-md-4">
+                <label asp-for="BannerUrl" class="form-label">URL Banner</label>
+                <input asp-for="BannerUrl" class="form-control" placeholder="Nhập URL ảnh banner..." />
+                <span asp-validation-for="BannerUrl" class="text-danger"></span>
+            </div>
+            <div class="col-md-4">
+                <label asp-for="Actors" class="form-label">Diễn viên (phân cách bằng dấu phẩy)</label>
+                <input asp-for="Actors" class="form-control" placeholder="Nhập tên diễn viên..." />
+                <span asp-validation-for="Actors" class="text-danger"></span>
+            </div>
+            <div class="col-md-4">
+                <label asp-for="Genres" class="form-label">Thể loại (phân cách bằng dấu phẩy)</label>
+                <input asp-for="Genres" class="form-control" placeholder="Nhập thể loại..." />
+                <span asp-validation-for="Genres" class="text-danger"></span>
+            </div>
+        </div>
+
+        <!-- Mô tả -->
+        <div class="row g-3 mt-3">
+            <div class="col-12">
+                <label asp-for="Description" class="form-label">Mô tả</label>
+                <textarea asp-for="Description" class="form-control" rows="4" placeholder="Nhập mô tả phim..."></textarea>
+                <span asp-validation-for="Description" class="text-danger"></span>
+            </div>
+        </div>
+
+        <!-- Nút Lưu -->
+        <div class="mt-4 d-flex justify-content-center">
+            <button type="submit" class="btn btn-primary w-45 me-3">Lưu</button>
+            <a asp-action="Index" class="btn btn-secondary w-45">Hủy</a>
+        </div>
+    </form>
+</div>
+
+
+<script>
+    function previewImage() {
+        const url = document.getElementById('bannerUrl').value;
+        const preview = document.getElementById('preview');
+        if (url) {
+            preview.src = url;
+            preview.style.display = 'block';
+        } else {
+            preview.style.display = 'none';
+        }
+    }
+</script>

@@ -1,0 +1,54 @@
+@model Backend.Models.Movie
+
+<h2 class="text-center mt-4">Chỉnh Sửa Phim</h2>
+
+<div class="container mt-4">
+    <form asp-action="Edit" method="post" class="border p-4 rounded shadow-sm bg-light">
+        @Html.AntiForgeryToken()
+
+        <input type="hidden" asp-for="Id" />
+
+        <!-- Tên phim -->
+        <div class="mb-3">
+            <label for="Title" class="form-label">Tên phim</label>
+            <input asp-for="Title" class="form-control form-control-lg" placeholder="Nhập tên phim..." />
+            <span asp-validation-for="Title" class="text-danger"></span>
+        </div>
+
+        <!-- Mô tả -->
+        <div class="mb-3">
+            <label for="Description" class="form-label">Mô tả</label>
+            <textarea asp-for="Description" class="form-control" rows="4" placeholder="Nhập mô tả phim..."></textarea>
+            <span asp-validation-for="Description" class="text-danger"></span>
+        </div>
+
+        <!-- Thể loại -->
+        <div class="mb-3">
+            <label for="Genres" class="form-label">Thể loại (phân cách bằng dấu phẩy)</label>
+            <input asp-for="Genres" class="form-control form-control-lg" placeholder="Nhập thể loại..." />
+            <span asp-validation-for="Genres" class="text-danger"></span>
+        </div>
+
+        <!-- Nút Lưu -->
+        <button type="submit" class="btn btn-success w-100 mt-3">Cập nhật</button>
+    </form>
+</div>
+
+
+<!-- Thêm một chút style cho form -->
+<style>
+    .form-control-lg {
+        font-size: 1.2rem;
+    }
+    .form-check-inline {
+        display: inline-block;
+    }
+    .btn-success {
+        background-color: #28a745;
+        border-color: #28a745;
+    }
+    .btn-success:hover {
+        background-color: #218838;
+        border-color: #1e7e34;
+    }
+</style>

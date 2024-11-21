@@ -1,0 +1,32 @@
+@model Backend.Models.Theatre
+
+<h2>Edit Theatre</h2>
+
+<form asp-action="Edit" method="post">
+    <input type="hidden" asp-for="Id" />
+
+    <div class="form-group">
+        <label asp-for="Name">Name</label>
+        <input asp-for="Name" class="form-control" />
+        <span asp-validation-for="Name" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="FullAddress">Full Address</label>
+        <input asp-for="FullAddress" class="form-control" />
+        <span asp-validation-for="FullAddress" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label>Facilities</label>
+        <input type="text" name="Facilities" class="form-control" value="@string.Join(", ", Model.Facilities)" />
+    </div>
+
+    <div class="form-group">
+        <label>Available Screens</label>
+        <input type="text" name="AvailableScreens" class="form-control" value="@string.Join(", ", Model.AvailableScreens)" />
+    </div>
+
+    <button type="submit" class="btn btn-primary">Save</button>
+    <a asp-action="Index" class="btn btn-secondary">Cancel</a>
+</form>
