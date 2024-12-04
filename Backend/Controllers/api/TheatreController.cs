@@ -3,12 +3,13 @@ using Backend.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Backend.Controllers
 {
     [ApiController]
-    [Route("api/theatres")] // Đường dẫn cho API Theatre
+    [Route("api/theatres")]
     public class TheatreController : ControllerBase
     {
         private readonly ApplicationDbContext _context;

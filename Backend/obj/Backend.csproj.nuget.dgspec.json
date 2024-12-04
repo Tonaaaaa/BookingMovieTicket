@@ -67,9 +67,17 @@
               "target": "Package",
               "version": "[8.0.2, )"
             },
+            "Swashbuckle.AspNetCore": {
+              "target": "Package",
+              "version": "[7.0.0, )"
+            },
             "System.ComponentModel.Annotations": {
               "target": "Package",
               "version": "[5.0.0, )"
+            },
+            "System.Text.Json": {
+              "target": "Package",
+              "version": "[9.0.0, )"
             }
           },
           "imports": [

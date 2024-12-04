@@ -26,8 +26,15 @@ namespace Backend.Controllers
                 .Include(s => s.Movie)
                 .Include(s => s.Theatre)
                 .ToListAsync();
+
+            if (showtimes == null || !showtimes.Any())
+            {
+                return Ok(new List<Showtime>()); // Đảm bảo trả về danh sách rỗng
+            }
+
             return Ok(showtimes);
         }
+
 
         // GET: api/showtimes/{id}
         [HttpGet("{id}")]
@@ -38,7 +45,9 @@ namespace Backend.Controllers
                 .Include(s => s.Theatre)
                 .FirstOrDefaultAsync(s => s.Id == id);
 
-            if (showtime == null) return NotFound();
+            if (showtime == null)
+                return NotFound();
+
             return Ok(showtime);
         }
 
@@ -48,6 +57,14 @@ namespace Backend.Controllers
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
+
+            var theatre = await _context.Theatres.FindAsync(showtime.TheatreId);
+            if (theatre == null || theatre.AvailableScreensList == null || 
+                !theatre.AvailableScreensList.Contains(showtime.Screen))
+{           
+                ModelState.AddModelError("Screen", "Màn hình không khả dụng tại rạp đã chọn.");
+                return BadRequest(ModelState);
+}
 
             _context.Showtimes.Add(showtime);
             await _context.SaveChangesAsync();
@@ -64,6 +81,13 @@ namespace Backend.Controllers
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
+            var theatre = await _context.Theatres.FindAsync(showtime.TheatreId);
+            if (theatre == null || !theatre.AvailableScreensList.Contains(showtime.Screen))
+            {
+                ModelState.AddModelError("Screen", "Màn hình không khả dụng tại rạp đã chọn.");
+                return BadRequest(ModelState);
+            }
+
             _context.Entry(showtime).State = EntityState.Modified;
 
             try
@@ -72,7 +96,7 @@ namespace Backend.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!_context.Showtimes.Any(s => s.Id == id))
+                if (!ShowtimeExists(id))
                     return NotFound();
                 throw;
             }
@@ -90,7 +114,13 @@ namespace Backend.Controllers
 
             _context.Showtimes.Remove(showtime);
             await _context.SaveChangesAsync();
+
             return NoContent();
+        }
+
+        private bool ShowtimeExists(int id)
+        {
+            return _context.Showtimes.Any(s => s.Id == id);
         }
     }
 }

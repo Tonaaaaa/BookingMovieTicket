@@ -5,6 +5,10 @@
       "PackagePath": "staticwebassets\\Backend.bundle.scp.css"
     },
     {
+      "Id": "C:\\Users\\tranv\\OneDrive\\Desktop\\BookingMovieTicket\\BookingMovieTicket\\Backend\\wwwroot\\Actor\\Tona1-cf5e2c07-1d9f-4f00-9740-468d2b6d526c.jpg",
+      "PackagePath": "staticwebassets\\Actor\\Tona1-cf5e2c07-1d9f-4f00-9740-468d2b6d526c.jpg"
+    },
+    {
       "Id": "C:\\Users\\tranv\\OneDrive\\Desktop\\BookingMovieTicket\\BookingMovieTicket\\Backend\\wwwroot\\css\\bootstrap.min.css",
       "PackagePath": "staticwebassets\\css\\bootstrap.min.css"
     },
@@ -51,6 +55,22 @@
     {
       "Id": "C:\\Users\\tranv\\OneDrive\\Desktop\\BookingMovieTicket\\BookingMovieTicket\\Backend\\wwwroot\\favicon.ico",
       "PackagePath": "staticwebassets\\favicon.ico"
+    },
+    {
+      "Id": "C:\\Users\\tranv\\OneDrive\\Desktop\\BookingMovieTicket\\BookingMovieTicket\\Backend\\wwwroot\\film\\Tona.jpg",
+      "PackagePath": "staticwebassets\\film\\Tona.jpg"
+    },
+    {
+      "Id": "C:\\Users\\tranv\\OneDrive\\Desktop\\BookingMovieTicket\\BookingMovieTicket\\Backend\\wwwroot\\film\\Tona1.jpg",
+      "PackagePath": "staticwebassets\\film\\Tona1.jpg"
+    },
+    {
+      "Id": "C:\\Users\\tranv\\OneDrive\\Desktop\\BookingMovieTicket\\BookingMovieTicket\\Backend\\wwwroot\\film\\test2.mp4",
+      "PackagePath": "staticwebassets\\film\\test2.mp4"
+    },
+    {
+      "Id": "C:\\Users\\tranv\\OneDrive\\Desktop\\BookingMovieTicket\\BookingMovieTicket\\Backend\\wwwroot\\film\\tải xuống.jpg",
+      "PackagePath": "staticwebassets\\film\\tải xuống.jpg"
     },
     {
       "Id": "C:\\Users\\tranv\\OneDrive\\Desktop\\BookingMovieTicket\\BookingMovieTicket\\Backend\\wwwroot\\fonts\\fontawesome\\fa-brands-400.eot",
@@ -1619,6 +1639,10 @@
     {
       "Id": "C:\\Users\\tranv\\OneDrive\\Desktop\\BookingMovieTicket\\BookingMovieTicket\\Backend\\wwwroot\\js\\setting-demo2.js",
       "PackagePath": "staticwebassets\\js\\setting-demo2.js"
+    },
+    {
+      "Id": "C:\\Users\\tranv\\OneDrive\\Desktop\\BookingMovieTicket\\BookingMovieTicket\\Backend\\wwwroot\\theatre\\CGV.png",
+      "PackagePath": "staticwebassets\\theatre\\CGV.png"
     },
     {
       "Id": "obj\\Debug\\net8.0\\staticwebassets\\msbuild.Backend.Microsoft.AspNetCore.StaticWebAssets.props",

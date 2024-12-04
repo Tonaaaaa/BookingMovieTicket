@@ -1,58 +1,54 @@
+import 'package:bookingmovieticket/pages/details_screen.dart';
+import 'package:bookingmovieticket/widgets/item_block.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../controllers/movie_controller.dart';
-import '../widgets/item_block.dart';
-import '../pages/details_screen.dart';
+import '../models/movie_model.dart';
 
 class MyMovieItem extends StatelessWidget {
-  const MyMovieItem({Key? key}) : super(key: key);
+  final MovieController movieController = Get.put(MovieController());
 
   @override
   Widget build(BuildContext context) {
     final Size size = MediaQuery.of(context).size;
 
-    // Lấy MovieController thông qua GetX
-    final MovieController movieController = Get.find<MovieController>();
-
     return Obx(() {
-      // Kiểm tra trạng thái tải dữ liệu
       if (movieController.isLoading.value) {
-        return Center(
+        return const Center(
           child: CircularProgressIndicator(),
         );
       }
 
-      // Kiểm tra nếu không có dữ liệu
       if (movieController.movies.isEmpty) {
-        return Center(
+        return const Center(
           child: Text(
-            'No movies available.',
+            'Không có phim nào để hiển thị.',
             style: TextStyle(fontSize: 18, color: Colors.grey),
           ),
         );
       }
 
-      // Danh sách phim từ MovieController
       var movies = movieController.movies;
 
-      // Hiển thị danh sách phim
-      return Container(
-        height: 230,
+      return SizedBox(
+        height: 250,
         width: size.width,
         child: ListView.builder(
           scrollDirection: Axis.horizontal,
           itemCount: movies.length,
-          itemBuilder: (_, i) {
-            final movie = movies[i];
-            return Hero(
-              tag: "${movie.title}$i",
-              child: ItemBlock(
-                model: movie,
-                isMovie: true,
-                onTap: (model) {
-                  Get.to(() => DetailsScreen(), arguments: [movie, i]);
-                },
-              ),
+          itemBuilder: (_, index) {
+            final Movie movie = movies[index];
+
+            return ItemBlock(
+              model: movie,
+              height: 150,
+              width: 120,
+              onTap: (selectedMovie) {
+                Get.to(
+                  () => DetailsScreen(),
+                  arguments: selectedMovie,
+                );
+              },
             );
           },
         ),

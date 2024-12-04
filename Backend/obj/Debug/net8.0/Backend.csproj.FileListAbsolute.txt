@@ -312,3 +312,12 @@ C:\Users\tranv\OneDrive\Desktop\BookingMovieTicket\BookingMovieTicket\Backend\ob
 C:\Users\tranv\OneDrive\Desktop\BookingMovieTicket\BookingMovieTicket\Backend\obj\Debug\net8.0\Backend.pdb
 C:\Users\tranv\OneDrive\Desktop\BookingMovieTicket\BookingMovieTicket\Backend\obj\Debug\net8.0\Backend.genruntimeconfig.cache
 C:\Users\tranv\OneDrive\Desktop\BookingMovieTicket\BookingMovieTicket\Backend\obj\Debug\net8.0\ref\Backend.dll
+C:\Users\tranv\OneDrive\Desktop\BookingMovieTicket\BookingMovieTicket\Backend\bin\Debug\net8.0\Microsoft.OpenApi.dll
+C:\Users\tranv\OneDrive\Desktop\BookingMovieTicket\BookingMovieTicket\Backend\bin\Debug\net8.0\Swashbuckle.AspNetCore.Swagger.dll
+C:\Users\tranv\OneDrive\Desktop\BookingMovieTicket\BookingMovieTicket\Backend\bin\Debug\net8.0\Swashbuckle.AspNetCore.SwaggerGen.dll
+C:\Users\tranv\OneDrive\Desktop\BookingMovieTicket\BookingMovieTicket\Backend\bin\Debug\net8.0\Swashbuckle.AspNetCore.SwaggerUI.dll
+C:\Users\tranv\OneDrive\Desktop\BookingMovieTicket\BookingMovieTicket\Backend\obj\Debug\net8.0\Backend.MvcApplicationPartsAssemblyInfo.cs
+C:\Users\tranv\OneDrive\Desktop\BookingMovieTicket\BookingMovieTicket\Backend\bin\Debug\net8.0\System.IO.Pipelines.dll
+C:\Users\tranv\OneDrive\Desktop\BookingMovieTicket\BookingMovieTicket\Backend\bin\Debug\net8.0\System.Text.Encodings.Web.dll
+C:\Users\tranv\OneDrive\Desktop\BookingMovieTicket\BookingMovieTicket\Backend\bin\Debug\net8.0\System.Text.Json.dll
+C:\Users\tranv\OneDrive\Desktop\BookingMovieTicket\BookingMovieTicket\Backend\bin\Debug\net8.0\runtimes\browser\lib\net8.0\System.Text.Encodings.Web.dll

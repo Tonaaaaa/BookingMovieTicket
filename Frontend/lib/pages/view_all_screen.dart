@@ -5,7 +5,6 @@ import 'package:get/get.dart';
 import 'package:bookingmovieticket/controllers/common_controller.dart';
 import 'package:bookingmovieticket/controllers/location_controller.dart';
 import 'package:bookingmovieticket/controllers/movie_controller.dart';
-import 'package:bookingmovieticket/utils/mytheme.dart';
 import 'package:bookingmovieticket/widgets/item_block.dart';
 
 class ViewAllScreen extends StatelessWidget {
@@ -35,7 +34,6 @@ class ViewAllScreen extends StatelessWidget {
                   context: context,
                   delegate: MySearchDelegate(
                     list: movieController.movies,
-                    isMovie: true,
                   ),
                 );
               },
@@ -67,7 +65,6 @@ class ViewAllScreen extends StatelessWidget {
                 model: movieController.movies[index],
                 height: 180,
                 width: 150,
-                isMovie: true,
                 onTap: (model) {
                   Get.to(() => DetailsScreen(), arguments: [model, index]);
                 },
@@ -83,17 +80,15 @@ class ViewAllScreen extends StatelessWidget {
 
 // Lớp tìm kiếm
 class MySearchDelegate extends SearchDelegate<String> {
-  final bool isMovie;
   final List<dynamic> list;
 
-  MySearchDelegate({this.isMovie = false, required this.list});
+  MySearchDelegate({required this.list});
 
   resultWidget(dynamic model) {
     return ItemBlock(
       model: model,
       height: 180,
       width: 150,
-      isMovie: isMovie,
       onTap: (model) {},
     );
   }

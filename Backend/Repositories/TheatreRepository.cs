@@ -1,9 +1,9 @@
 using Backend.DataAccess;
 using Backend.Models;
-using Backend.Services;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Backend.Services;
 
 namespace Backend.Repositories
 {
@@ -21,9 +21,9 @@ namespace Backend.Repositories
             return await _context.Theatres.ToListAsync();
         }
 
-        public async Task<Theatre> GetTheatreByIdAsync(int id)
+        public async Task<Theatre?> GetTheatreByIdAsync(int id)
         {
-            return await _context.Theatres.FindAsync(id);
+            return await _context.Theatres.FirstOrDefaultAsync(t => t.Id == id);
         }
 
         public async Task AddTheatreAsync(Theatre theatre)

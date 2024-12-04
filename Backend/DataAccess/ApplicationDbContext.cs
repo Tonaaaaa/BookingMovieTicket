@@ -14,6 +14,8 @@ namespace Backend.DataAccess
         public DbSet<Theatre> Theatres { get; set; }
         public DbSet<ConcessionItem> ConcessionItems { get; set; }
         public DbSet<Showtime> Showtimes { get; set; }
+        public DbSet<Actor> Actors { get; set; } 
+         public DbSet<MovieActor> MovieActors { get; set; }
 
     }
 }

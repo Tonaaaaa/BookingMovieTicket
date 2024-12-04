@@ -9,7 +9,7 @@
         <!-- Chọn Phim -->
         <div class="mb-3">
             <label asp-for="MovieId" class="form-label">Phim</label>
-            <select asp-for="MovieId" class="form-select">
+            <select asp-for="MovieId" id="MovieId" class="form-select">
                 <option value="">-- Chọn Phim --</option>
                 @foreach (var movie in ViewBag.Movies as List<Backend.Models.Movie>)
                 {
@@ -22,7 +22,7 @@
         <!-- Chọn Rạp -->
         <div class="mb-3">
             <label asp-for="TheatreId" class="form-label">Rạp</label>
-            <select asp-for="TheatreId" class="form-select">
+            <select asp-for="TheatreId" id="TheatreId" class="form-select">
                 <option value="">-- Chọn Rạp --</option>
                 @foreach (var theatre in ViewBag.Theatres as List<Backend.Models.Theatre>)
                 {
@@ -35,21 +35,25 @@
         <!-- Chọn Màn Hình -->
         <div class="mb-3">
             <label asp-for="Screen" class="form-label">Màn hình chiếu</label>
-            <select asp-for="Screen" class="form-select">
+            <select asp-for="Screen" id="Screen" class="form-select">
                 <option value="">-- Chọn Màn Hình --</option>
-                @foreach (var screen in ViewBag.Screens as List<string>)
-                {
-                    <option value="@screen">@screen</option>
-                }
+                <!-- Các tùy chọn màn hình sẽ được cập nhật động -->
             </select>
             <span asp-validation-for="Screen" class="text-danger"></span>
         </div>
 
-        <!-- Chọn Thời gian -->
+        <!-- Thời gian bắt đầu -->
         <div class="mb-3">
             <label asp-for="StartTime" class="form-label">Thời gian bắt đầu</label>
             <input type="datetime-local" asp-for="StartTime" class="form-control" />
             <span asp-validation-for="StartTime" class="text-danger"></span>
+        </div>
+
+        <!-- Giá vé -->
+        <div class="mb-3">
+            <label asp-for="TicketPrice" class="form-label">Giá vé</label>
+            <input type="number" asp-for="TicketPrice" class="form-control" />
+            <span asp-validation-for="TicketPrice" class="text-danger"></span>
         </div>
 
         <!-- Nút Lưu -->
@@ -59,3 +63,22 @@
         </div>
     </form>
 </div>
+
+<script>
+    document.getElementById("TheatreId").addEventListener("change", function () {
+        const theatreId = this.value;
+
+        fetch(`/AdminShowtime/GetScreensByTheatre?theatreId=${theatreId}`)
+            .then(response => response.json())
+            .then(data => {
+                const screenSelect = document.getElementById("Screen");
+                screenSelect.innerHTML = '<option value="">-- Chọn Màn Hình --</option>';
+                data.forEach(screen => {
+                    const option = document.createElement("option");
+                    option.value = screen;
+                    option.textContent = screen;
+                    screenSelect.appendChild(option);
+                });
+            });
+    });
+</script>

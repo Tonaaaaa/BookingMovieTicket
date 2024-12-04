@@ -1,244 +1,173 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
-import 'package:intl/intl.dart';
-// import 'package:bookingmovieticket/pages/seat_selection_screen.dart';
-import '../controllers/common_controller.dart';
-// import '../controllers/seat_selection_controller.dart';
-import '../utils/screen_selection_block.dart';
-import '../utils/custom_calendar.dart';
-import '../controllers/calendar_controller.dart';
+import '../controllers/theatre_controller.dart';
 import '../models/movie_model.dart';
-import '../utils/dummy_data.dart';
-import '../utils/mytheme.dart';
-import '../widgets/theatre_block.dart';
+import '../models/theatre_model.dart';
+import 'select_showtime_screen.dart'; // Import màn hình SelectShowtimeScreen
 
-class ListCinemaScreen extends StatefulWidget {
+class ListCinemaScreen extends StatelessWidget {
   final Movie model;
+
   const ListCinemaScreen({Key? key, required this.model}) : super(key: key);
 
   @override
-  State<ListCinemaScreen> createState() => _ListCinemaScreenState();
-}
-
-class _ListCinemaScreenState extends State<ListCinemaScreen> {
-  final DateFormat format = DateFormat("dd MMM");
-
-  final now = DateTime.now();
-
-  String selectedDate = DateFormat("dd MMM").format(DateTime.now());
-
-  String selectedLanguage = "English";
-
-  String selectedScreen = "3D";
-  late CalendarController commonController;
-
-  @override
-  void initState() {
-    commonController = Get.put(CalendarController());
-    // Get.put(SeatSelectionController());
-    super.initState();
-  }
-
-  @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-      onWillPop: () {
-        Get.delete<CalendarController>();
-        print(commonController.selectedMovieDate.value);
-        return Future.value(true);
-      },
-      child: Scaffold(
-        backgroundColor: const Color(0xFFF5F5FA),
-        bottomNavigationBar: BottomAppBar(
-          color: MyTheme.appBarColor,
-          elevation: 0,
-          child: Container(
-            width: double.maxFinite,
-            height: AppBar().preferredSize.height,
-            child: Row(
-              children: [
-                Expanded(
-                  flex: 7,
-                  child: StatefulBuilder(
-                    builder: (_, setState) {
-                      final todayDate = format.format(now);
-                      final tomorrowDate =
-                          format.format(now.add(const Duration(days: 1)));
-                      String text = "";
+    final TheatreController theatreController = Get.put(TheatreController());
+    theatreController.fetchTheatres();
 
-                      if (selectedDate == todayDate) {
-                        text = "Today, ";
-                      } else if (selectedDate == tomorrowDate) {
-                        text = "Tomorrow, ";
-                      } else {
-                        text = DateFormat("EEE").format(
-                                commonController.selectedMovieDate.value) +
-                            ", ";
-                      }
+    return Scaffold(
+      backgroundColor: const Color(0xFFF5F5FA),
+      appBar: AppBar(
+        title: Text("Chọn rạp cho phim: ${model.title}"),
+        backgroundColor: Colors.white,
+        foregroundColor: Colors.black,
+        elevation: 0,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () => Get.back(),
+        ),
+      ),
+      body: Column(
+        children: [
+          // Thanh tìm kiếm
+          Padding(
+            padding: const EdgeInsets.all(16),
+            child: TextField(
+              decoration: InputDecoration(
+                hintText: "Tìm rạp...",
+                prefixIcon: const Icon(Icons.search),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(8),
+                ),
+              ),
+              onChanged: (value) {
+                theatreController.searchTheatre(value);
+              },
+            ),
+          ),
+          // Danh sách rạp
+          Expanded(
+            child: Obx(() {
+              if (theatreController.isLoading.value) {
+                return const Center(child: CircularProgressIndicator());
+              }
 
-                      return ListTile(
-                        onTap: () {
-                          showModalBottomSheet(
-                                  context: context,
-                                  builder: (_) => CustomCalendar(),
-                                  constraints: BoxConstraints(
-                                      maxHeight:
-                                          MediaQuery.of(context).size.height *
-                                              0.35))
-                              .then((value) => setState(() {
-                                    if (value != null) {
-                                      selectedDate = format.format(value);
-                                    }
-                                  }));
-                        },
-                        horizontalTitleGap: 0,
-                        textColor: Colors.white,
-                        leading: const Icon(
-                          Icons.calendar_month,
-                          color: Colors.white,
-                        ),
-                        title: Text(
-                          "$text$selectedDate",
-                          style: const TextStyle(fontSize: 14),
-                        ),
-                        trailing: const Icon(
-                          Icons.keyboard_arrow_down,
-                          color: Colors.white,
+              if (theatreController.filteredTheatres.isEmpty) {
+                return const Center(
+                  child: Text(
+                    'Không có rạp chiếu phim phù hợp.',
+                    style: TextStyle(fontSize: 18, color: Colors.grey),
+                  ),
+                );
+              }
+
+              return ListView.builder(
+                itemCount: theatreController.filteredTheatres.length,
+                itemBuilder: (context, index) {
+                  final theatre = theatreController.filteredTheatres[index];
+                  return GestureDetector(
+                    onTap: () {
+                      // Điều hướng đến SelectShowtimeScreen khi chọn rạp
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => ShowtimeSelectorScreen(
+                            theatreName: theatre.name,
+                            theatreId: theatre.id, // Truyền ID rạp
+                          ),
                         ),
                       );
                     },
+                    child: _buildCinemaItem(theatre),
+                  );
+                },
+              );
+            }),
+          ),
+        ],
+      ),
+    );
+  }
+
+  // Widget hiển thị thông tin từng rạp
+  Widget _buildCinemaItem(Theatre theatre) {
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(8),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey.withOpacity(0.2),
+            blurRadius: 6,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Hiển thị hình ảnh từ URL hoặc placeholder
+          ClipRRect(
+            borderRadius: BorderRadius.circular(8),
+            child: Image.network(
+              theatre.imageUrl ?? "https://via.placeholder.com/100",
+              width: 60,
+              height: 60,
+              fit: BoxFit.cover,
+              errorBuilder: (context, error, stackTrace) {
+                print("Error loading image: ${theatre.imageUrl}");
+                return Container(
+                  width: 60,
+                  height: 60,
+                  color: Colors.grey[200],
+                  child: const Icon(Icons.broken_image,
+                      size: 40, color: Colors.grey),
+                );
+              },
+            ),
+          ),
+          const SizedBox(width: 16),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  theatre.name,
+                  style: const TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 16,
                   ),
                 ),
-                Expanded(
-                  flex: 5,
-                  child: StatefulBuilder(builder: (context, setState) {
-                    return ListTile(
-                      onTap: () {
-                        showModalBottomSheet(
-                          context: context,
-                          isScrollControlled: true,
-                          builder: (_) => ScreenSelectionBlock(
-                            onScreenSelect: (screen) {
-                              CommonController.instance.updateScreen(screen);
-                              setState(() => selectedScreen = screen);
-                            },
-                          ),
-                          constraints: BoxConstraints(
-                              maxHeight:
-                                  MediaQuery.of(context).size.height * 0.25),
-                        );
-                      },
-                      horizontalTitleGap: 0,
-                      textColor: Colors.white,
-                      title: Text(
-                        "$selectedLanguage, $selectedScreen",
-                      ),
-                      trailing: const Icon(
-                        Icons.keyboard_arrow_down,
-                        color: Colors.white,
-                      ),
-                    );
-                  }),
+                const SizedBox(height: 4),
+                Text(
+                  theatre.fullAddress,
+                  style: const TextStyle(color: Colors.grey, fontSize: 14),
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  "Màn hình: ${theatre.availableScreens.join(", ")}",
+                  style: const TextStyle(color: Colors.black54, fontSize: 12),
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
                 ),
               ],
             ),
           ),
-        ),
-        appBar: AppBar(
-          elevation: 0,
-          title: Text(widget.model.title),
-          actions: [
-            IconButton(
-              onPressed: () {
-                showSearch(
-                  context: context,
-                  delegate: TheatreSearchDelegate(widget.model),
-                );
-              },
-              icon: SvgPicture.asset("assets/icons/search.svg"),
-            ),
-          ],
-        ),
-        body: ListView.builder(
-          physics: const BouncingScrollPhysics(),
-          itemCount: theatres.length,
-          itemBuilder: (_, index) {
-            return Container(
-              padding: EdgeInsets.only(
-                  bottom: index != theatres.length - 1 ? 20 : 0),
-              child: TheatreBlock(
-                model: theatres[index],
-                onTimeTap: (index) {
-                  // Get.to(() => SeatSelectionScreen(
-                  // theatreModel: theatres[index], movieModel: widget.model));
-                },
-              ),
-            );
-          },
-        ),
-      ),
-    );
-  }
-}
-
-class TheatreSearchDelegate extends SearchDelegate {
-  final Movie model;
-  TheatreSearchDelegate(this.model);
-
-  @override
-  List<Widget>? buildActions(BuildContext context) {
-    return [
-      Container(),
-    ];
-  }
-
-  @override
-  Widget? buildLeading(BuildContext context) {
-    return IconButton(
-      onPressed: () {
-        close(context, null.toString());
-      },
-      icon: AnimatedIcon(
-        icon: AnimatedIcons.menu_close,
-        progress: transitionAnimation,
-      ),
-    );
-  }
-
-  @override
-  Widget buildResults(BuildContext context) {
-    // TODO: implement buildResults
-    throw UnimplementedError();
-  }
-
-  @override
-  Widget buildSuggestions(BuildContext context) {
-    final suggestionList = query.isEmpty
-        ? theatres
-        : theatres
-            .where(
-              (element) =>
-                  element.name.toLowerCase().contains(query.toLowerCase()),
-            )
-            .toList();
-
-    return ListView.builder(
-      physics: const BouncingScrollPhysics(),
-      itemCount: suggestionList.length,
-      itemBuilder: (_, index) {
-        return Container(
-          padding: EdgeInsets.only(
-              bottom: index != suggestionList.length - 1 ? 20 : 0),
-          child: TheatreBlock(
-            model: suggestionList[index],
-            onTimeTap: (index) {
-              // Get.to(() => SeatSelectionScreen(
-              //     theatreModel: suggestionList[index], movieModel: model));
+          TextButton(
+            onPressed: () {
+              Get.snackbar("Tìm đường", "Tính năng này đang được phát triển.");
             },
+            child: const Text(
+              "Tìm đường",
+              style: TextStyle(color: Colors.pinkAccent),
+            ),
           ),
-        );
-      },
+        ],
+      ),
     );
   }
 }

@@ -1,8 +1,10 @@
 using Backend.Models;
 using Backend.Services;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
+using System.IO;
 using System.Threading.Tasks;
-using Backend.DataAccess;
 
 namespace Backend.Controllers
 {
@@ -27,33 +29,41 @@ namespace Backend.Controllers
         [HttpGet]
         public IActionResult Create()
         {
-            // Danh sách loại màn hình khả dụng
-            ViewBag.ScreenOptions = new List<string> { "2D", "3D", "IMAX", "IMAX 3D", "4DX", "Dolby Cinema", "ScreenX" };
+            ViewBag.ScreenOptions = new List<string> { "2D", "3D", "IMAX", "4DX", "ScreenX" };
             return View();
         }
-
 
         // Tạo rạp (POST)
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(Theatre theatre, string[] AvailableScreens)
+        public async Task<IActionResult> Create(Theatre theatre, string[] AvailableScreens, string[] FacilityList, IFormFile ImageFile)
         {
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
-                // Chuyển đổi danh sách checkbox thành chuỗi
-                theatre.AvailableScreens = string.Join(",", AvailableScreens);
-        
-                // Thực hiện lưu trữ
-                _theatreService.AddTheatreAsync(theatre); // Sử dụng service thay vì _context
-                return RedirectToAction(nameof(Index));
+                ViewBag.ScreenOptions = new List<string> { "2D", "3D", "IMAX", "4DX", "ScreenX" };
+                return View(theatre);
             }
-        
-            // Nếu lỗi, truyền lại danh sách màn hình vào ViewBag
-            ViewBag.ScreenOptions = new List<string> { "2D", "3D", "IMAX", "IMAX 3D", "4DX", "Dolby Cinema", "ScreenX" };
-            return View(theatre);
+
+            // Xử lý tệp hình ảnh
+            if (ImageFile != null && ImageFile.Length > 0)
+            {
+                string fileName = Path.GetFileName(ImageFile.FileName);
+                string filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "theatre", fileName);
+
+                using (var stream = new FileStream(filePath, FileMode.Create))
+                {
+                    await ImageFile.CopyToAsync(stream);
+                }
+
+                theatre.ImageUrl = $"/theatre/{fileName}";
+            }
+
+            theatre.AvailableScreens = string.Join(", ", AvailableScreens);
+            theatre.Facilities = string.Join(", ", FacilityList);
+
+            await _theatreService.AddTheatreAsync(theatre);
+            return RedirectToAction(nameof(Index));
         }
-
-
 
         // Chỉnh sửa rạp (GET)
         [HttpGet]
@@ -63,34 +73,52 @@ namespace Backend.Controllers
             if (theatre == null)
                 return NotFound();
 
+            ViewBag.ScreenOptions = new List<string> { "2D", "3D", "IMAX", "4DX", "ScreenX" };
+            ViewBag.SelectedScreens = theatre.AvailableScreensList;
+            ViewBag.SelectedFacilities = theatre.FacilityList;
+
             return View(theatre);
         }
 
         // Chỉnh sửa rạp (POST)
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, Theatre theatre)
+        public async Task<IActionResult> Edit(int id, Theatre theatre, string[] AvailableScreens, string[] FacilityList, IFormFile ImageFile)
         {
             if (id != theatre.Id)
                 return NotFound();
 
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
-                await _theatreService.UpdateTheatreAsync(theatre);
-                return RedirectToAction(nameof(Index));
+                ViewBag.ScreenOptions = new List<string> { "2D", "3D", "IMAX", "4DX", "ScreenX" };
+                return View(theatre);
             }
-            return View(theatre);
+
+            if (ImageFile != null && ImageFile.Length > 0)
+            {
+                string fileName = Path.GetFileName(ImageFile.FileName);
+                string filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "theatre", fileName);
+
+                using (var stream = new FileStream(filePath, FileMode.Create))
+                {
+                    await ImageFile.CopyToAsync(stream);
+                }
+
+                theatre.ImageUrl = $"/theatre/{fileName}";
+            }
+
+            theatre.AvailableScreens = string.Join(", ", AvailableScreens);
+            theatre.Facilities = string.Join(", ", FacilityList);
+
+            await _theatreService.UpdateTheatreAsync(theatre);
+            return RedirectToAction(nameof(Index));
         }
 
-        // Xóa rạp (POST)
+        // Xóa rạp
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Delete(int id)
         {
-            var theatre = await _theatreService.GetTheatreByIdAsync(id);
-            if (theatre == null)
-                return NotFound();
-
             await _theatreService.DeleteTheatreAsync(id);
             return RedirectToAction(nameof(Index));
         }

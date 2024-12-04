@@ -16,8 +16,12 @@
             <thead class="table-dark">
                 <tr>
                     <th>#</th>
+                    <th>Poster</th>
                     <th>Tên Phim</th>
                     <th>Thể Loại</th>
+                    <th>Định Dạng</th>
+                    <th>Ngôn Ngữ</th>
+                    <th>Phân Loại</th>
                     <th>Thao Tác</th>
                 </tr>
             </thead>
@@ -26,6 +30,16 @@
                 {
                     <tr>
                         <td>@movie.Id</td>
+                        <td>
+                            @if (!string.IsNullOrEmpty(movie.BannerUrl))
+                            {
+                                <img src="@movie.BannerUrl" alt="Poster của @movie.Title" style="width: 80px; height: 120px; object-fit: cover; border: 1px solid #ddd; border-radius: 5px;" />
+                            }
+                            else
+                            {
+                                <span class="text-muted">Không có</span>
+                            }
+                        </td>
                         <td>
                             <strong>@movie.Title</strong>
                             <p class="text-muted mb-0">
@@ -44,6 +58,35 @@
                             {
                                 <span class="text-muted">Không có</span>
                             }
+                        </td>
+                        <td>
+                            @if (movie.Formats != null && movie.Formats.Any())
+                            {
+                                @foreach (var format in movie.Formats)
+                                {
+                                    <span class="badge bg-info me-1">@format</span>
+                                }
+                            }
+                            else
+                            {
+                                <span class="text-muted">Không có</span>
+                            }
+                        </td>
+                        <td>
+                            @if (movie.LanguagesAvailable != null && movie.LanguagesAvailable.Any())
+                            {
+                                @foreach (var language in movie.LanguagesAvailable)
+                                {
+                                    <span class="badge bg-primary me-1">@language</span>
+                                }
+                            }
+                            else
+                            {
+                                <span class="text-muted">Không có</span>
+                            }
+                        </td>
+                        <td>
+                            <span class="badge bg-warning text-dark">@movie.AgeRating</span>
                         </td>
                         <td>
                             <div class="btn-group">

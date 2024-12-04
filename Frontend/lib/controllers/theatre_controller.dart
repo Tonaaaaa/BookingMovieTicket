@@ -1,56 +1,52 @@
 import 'dart:convert';
-import 'package:bookingmovieticket/models/theatre_model.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
+import '../models/theatre_model.dart';
 
 class TheatreController extends GetxController {
-  final String baseUrl = "http://<your-api-url>/api/Theatre";
-
-  var theatres = <Theatre>[].obs; // Danh sách rạp
-  var isLoading = false.obs; // Trạng thái tải dữ liệu
+  var isLoading = true.obs;
+  var theatres = <Theatre>[].obs;
+  var filteredTheatres = <Theatre>[].obs;
 
   @override
   void onInit() {
     super.onInit();
-    fetchTheatres(); // Lấy danh sách rạp khi khởi tạo
+    fetchTheatres();
   }
 
-  // Lấy danh sách rạp
   Future<void> fetchTheatres() async {
     try {
-      isLoading(true); // Bắt đầu tải
-      final response = await http.get(Uri.parse(baseUrl));
+      isLoading(true);
+      var url = Uri.parse("http://10.0.2.2:5130/api/theatres");
+      var response = await http.get(url);
 
       if (response.statusCode == 200) {
-        final List<dynamic> data = json.decode(response.body);
-        theatres.value = data.map((json) => Theatre.fromJson(json)).toList();
+        var jsonData = json.decode(response.body);
+        theatres.value = List<Theatre>.from(
+          jsonData.map((item) => Theatre.fromJson(item)),
+        );
+        filteredTheatres.value = theatres.toList();
       } else {
-        Get.snackbar("Error", "Failed to load theatres");
+        print("Failed to fetch theatres: ${response.statusCode}");
+        Get.snackbar(
+            'Error', 'Failed to fetch theatres: ${response.statusCode}');
       }
     } catch (e) {
-      Get.snackbar("Error", e.toString());
+      print("Error fetching theatres: $e");
+      Get.snackbar('Error', e.toString());
     } finally {
-      isLoading(false); // Kết thúc tải
+      isLoading(false);
     }
   }
 
-  // Lấy thông tin rạp theo ID
-  Future<Theatre?> getTheatreById(String id) async {
-    try {
-      isLoading(true);
-      final response = await http.get(Uri.parse('$baseUrl/$id'));
-
-      if (response.statusCode == 200) {
-        return Theatre.fromJson(json.decode(response.body));
-      } else {
-        Get.snackbar("Error", "Failed to fetch theatre");
-        return null;
-      }
-    } catch (e) {
-      Get.snackbar("Error", e.toString());
-      return null;
-    } finally {
-      isLoading(false);
+  void searchTheatre(String query) {
+    if (query.isEmpty) {
+      filteredTheatres.value = theatres.toList();
+    } else {
+      filteredTheatres.value = theatres
+          .where((theatre) =>
+              theatre.name.toLowerCase().contains(query.toLowerCase()))
+          .toList();
     }
   }
 }

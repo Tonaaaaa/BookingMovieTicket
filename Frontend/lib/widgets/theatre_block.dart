@@ -1,214 +1,56 @@
 import 'package:bookingmovieticket/models/theatre_model.dart';
-import 'package:bookingmovieticket/utils/dummy_data.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
-import 'package:bookingmovieticket/controllers/calendar_controller.dart';
-import 'package:bookingmovieticket/controllers/location_controller.dart';
-// import 'package:bookingmovieticket/controllers/seat_selection_controller.dart';
-
-// import 'package:bookingmovieticket/pages/seat_selection_screen.dart';
-import 'package:bookingmovieticket/utils/mytheme.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
-// import 'package:bookingmovieticket/widgets/facilities_bottom_sheet.dart';
+import '../controllers/calendar_controller.dart';
+import '../utils/mytheme.dart';
 
 class TheatreBlock extends StatelessWidget {
   final Theatre model;
   final bool isBooking;
   final Function(int) onTimeTap;
+  final List<String> timings; // Thêm danh sách timings từ `Showtime`
+
   const TheatreBlock({
     Key? key,
     required this.model,
     this.isBooking = false,
     required this.onTimeTap,
+    required this.timings, // Truyền danh sách timings từ ngoài vào
   }) : super(key: key);
-
-  static const CameraPosition _kGooglePlex = CameraPosition(
-    target: LatLng(10.823099, 106.629662), // HCM
-    zoom: 14.4746,
-  );
 
   @override
   Widget build(BuildContext context) {
     var instance = CalendarController.instance;
+
+    // Vị trí Google Maps
+    CameraPosition cameraPosition = CameraPosition(
+      target: model.coordinates != null
+          ? LatLng(
+              double.tryParse(model.coordinates!.split(',')[0]) ?? 10.823099,
+              double.tryParse(model.coordinates!.split(',')[1]) ?? 106.629662,
+            )
+          : const LatLng(10.823099, 106.629662),
+      zoom: 14.4746,
+    );
+
     return Container(
       color: Colors.white,
       padding: const EdgeInsets.all(20),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          // Tên rạp và nút thông tin
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(
-                model.name,
-              ),
+              Text(model.name, style: const TextStyle(fontSize: 18)),
               GestureDetector(
                 onTap: () {
-                  // showModalBottomSheet(
-                  //   context: context,
-                  //   isScrollControlled: true,
-                  //   backgroundColor: Colors.transparent,
-                  //   constraints: BoxConstraints(
-                  //     maxHeight: MediaQuery.of(context).size.height * 0.63,
-                  //   ),
-                  //   builder: (_) => FacilitesBottomSheet(model: model),
-                  // );
-                  showModalBottomSheet(
-                      context: context,
-                      backgroundColor: Colors.transparent,
-                      //isScrollControlled: true,
-                      constraints: BoxConstraints(
-                        maxHeight: MediaQuery.of(context).size.height * 0.6,
-                      ),
-                      builder: (_) {
-                        return Stack(
-                          // textDirection: TextDirection.rtl,
-                          children: [
-                            Container(
-                              margin: const EdgeInsets.only(top: 40),
-                              height: double.maxFinite,
-                              width: double.maxFinite,
-                              color: Colors.white,
-                              padding: const EdgeInsets.all(20),
-                              child: Column(
-                                children: [
-                                  Container(
-                                    height: 150,
-                                    decoration: BoxDecoration(
-                                        borderRadius:
-                                            BorderRadius.circular(10)),
-                                    child: ClipRRect(
-                                      borderRadius: BorderRadius.circular(10),
-                                      child: GoogleMap(
-                                        mapType: MapType.normal,
-                                        initialCameraPosition: _kGooglePlex,
-                                        gestureRecognizers: <Factory<
-                                            OneSequenceGestureRecognizer>>{
-                                          Factory<OneSequenceGestureRecognizer>(
-                                            () => EagerGestureRecognizer(),
-                                          )
-                                        },
-                                        onMapCreated:
-                                            (GoogleMapController controller) {
-                                          //_controller.complete(controller);
-                                        },
-                                        zoomControlsEnabled: true,
-                                      ),
-                                    ),
-                                  ),
-                                  const SizedBox(
-                                    height: 10,
-                                  ),
-                                  Text(
-                                    model.name,
-                                    style: const TextStyle(fontSize: 18),
-                                  ),
-                                  RichText(
-                                      text: TextSpan(
-                                    children: [
-                                      const WidgetSpan(
-                                        child: Icon(
-                                          Icons.location_on,
-                                          size: 25,
-                                          color: Color(0xff999999),
-                                        ),
-                                      ),
-                                      TextSpan(
-                                        text: LocationController
-                                            .instance.city.value,
-                                        style: const TextStyle(
-                                            color: Color(0xff999999),
-                                            fontSize: 16),
-                                      ),
-                                    ],
-                                  )),
-                                  const SizedBox(height: 10),
-                                  Text(
-                                    model.fullAddress,
-                                    textAlign: TextAlign.center,
-                                    style: const TextStyle(
-                                        fontSize: 16, color: Color(0xff999999)),
-                                  ),
-                                  const SizedBox(height: 10),
-                                  const Align(
-                                    alignment: Alignment.centerLeft,
-                                    child: Text(
-                                      "Available Facilities",
-                                      style: TextStyle(
-                                        fontSize: 16,
-                                      ),
-                                    ),
-                                  ),
-                                  const SizedBox(height: 10),
-                                  Expanded(
-                                    child: ListView.builder(
-                                      shrinkWrap: true,
-                                      scrollDirection: Axis.horizontal,
-                                      itemCount: model.facilities.length,
-                                      itemBuilder: (_, index) {
-                                        return Padding(
-                                          padding:
-                                              const EdgeInsets.only(right: 20),
-                                          child: Column(
-                                            children: [
-                                              Container(
-                                                decoration: BoxDecoration(
-                                                  borderRadius:
-                                                      BorderRadius.circular(30),
-                                                  color: MyTheme
-                                                      .redGiftGradientColors[0],
-                                                ),
-                                                height: 60,
-                                                width: 60,
-                                                child: Padding(
-                                                  padding:
-                                                      const EdgeInsets.all(15),
-                                                  child: SvgPicture.asset(
-                                                    facilityAsset[index],
-                                                    height: 15,
-                                                    width: 15,
-                                                  ),
-                                                ),
-                                              ),
-                                              Text(
-                                                model.facilities[index],
-                                                style: const TextStyle(
-                                                    color: Color(0xff999999)),
-                                              ),
-                                            ],
-                                          ),
-                                        );
-                                        SizedBox(
-                                            width:
-                                                10); // Khoảng cách giữa các icon
-                                      },
-                                    ),
-                                  )
-                                ],
-                              ),
-                            ),
-                            Container(
-                              height: 80,
-                              child: Center(
-                                child: CircleAvatar(
-                                  backgroundColor: MyTheme.splash,
-                                  radius: 40,
-                                  child: SvgPicture.asset(
-                                    "assets/icons/gps.svg",
-                                    height: 40,
-                                    width: 40,
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ],
-                        );
-                      });
+                  _showTheatreDetails(context, model, cameraPosition);
                 },
                 child: Icon(
                   Icons.info_outline,
@@ -218,9 +60,9 @@ class TheatreBlock extends StatelessWidget {
               )
             ],
           ),
-          const SizedBox(
-            height: 5,
-          ),
+          const SizedBox(height: 5),
+
+          // Hiển thị ngày chiếu
           isBooking
               ? Text(
                   instance.format.format(instance.selectedMovieDate.value),
@@ -237,7 +79,7 @@ class TheatreBlock extends StatelessWidget {
                         ),
                       ),
                       TextSpan(
-                        text: LocationController.instance.city.value + ", ",
+                        text: "${model.fullAddress}, ",
                         style: const TextStyle(color: Color(0xff999999)),
                       ),
                       const TextSpan(
@@ -247,21 +89,24 @@ class TheatreBlock extends StatelessWidget {
                     ],
                   ),
                 ),
-          const SizedBox(
-            height: 10,
-          ),
+          const SizedBox(height: 10),
 
+          // Danh sách thời gian chiếu
           Wrap(
             runSpacing: 10,
             spacing: 20,
-            children: List.generate(4, (index) {
+            children: timings.asMap().entries.map((entry) {
+              int index = entry.key;
+              String time = entry.value;
+
               Color color =
                   index % 2 == 0 ? MyTheme.orangeColor : MyTheme.greenColor;
 
               return GestureDetector(
-                onTap: () {},
+                onTap: () {
+                  onTimeTap(index); // Gọi sự kiện chọn thời gian
+                },
                 child: Container(
-                  //height: 30,
                   decoration: BoxDecoration(
                     color: const Color(0x22E5E5E5),
                     borderRadius: BorderRadius.circular(5),
@@ -273,63 +118,111 @@ class TheatreBlock extends StatelessWidget {
                   padding:
                       const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
                   child: Text(
-                    model.timings[index],
+                    time,
                     style: TextStyle(color: color),
                   ),
                 ),
               );
-            }),
-          )
-
-          // Obx(
-          //   () => Wrap(
-          //     runSpacing: 10,
-          //     alignment: WrapAlignment.spaceBetween,
-          //     spacing: 20,
-          //     children: List.generate(
-          //       4,
-          //       (index) {
-          //         //for dummy data
-          //         bool isSelected = index ==
-          //                 SeatSelectionController
-          //                     .instance.timeSelectedIndex.value &&
-          //             isBooking;
-          //         Color color =
-          //             index % 2 == 0 ? MyTheme.orangeColor : MyTheme.greenColor;
-          //         return GestureDetector(
-          //           onTap: () {
-          //             //to seat selection
-          //             onTimeTap(index);
-          //           },
-          //           child: AnimatedContainer(
-          //             duration: const Duration(milliseconds: 300),
-          //             decoration: BoxDecoration(
-          //               color: isSelected
-          //                   ? MyTheme.greenColor
-          //                   : const Color(0x22E5E5E5),
-          //               borderRadius: BorderRadius.circular(5),
-          //               border: Border.all(
-          //                 width: 1,
-          //                 color: isSelected
-          //                     ? MyTheme.greenColor
-          //                     : const Color(0xffE5E5E5),
-          //               ),
-          //             ),
-          //             padding: const EdgeInsets.symmetric(
-          //                 horizontal: 15, vertical: 10),
-          //             child: Text(
-          //               model.timings[index],
-          //               style:
-          //                   TextStyle(color: isSelected ? Colors.white : color),
-          //             ),
-          //           ),
-          //         );
-          //       },
-          //     ),
-          //   ),
-          // )
+            }).toList(),
+          ),
         ],
       ),
+    );
+  }
+
+  // Hiển thị thông tin chi tiết của rạp trong BottomSheet
+  void _showTheatreDetails(
+      BuildContext context, Theatre model, CameraPosition cameraPosition) {
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: Colors.transparent,
+      constraints: BoxConstraints(
+        maxHeight: MediaQuery.of(context).size.height * 0.6,
+      ),
+      builder: (_) {
+        return Stack(
+          children: [
+            Container(
+              margin: const EdgeInsets.only(top: 40),
+              height: double.maxFinite,
+              width: double.maxFinite,
+              color: Colors.white,
+              padding: const EdgeInsets.all(20),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Bản đồ
+                  Container(
+                    height: 150,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(10),
+                      child: GoogleMap(
+                        mapType: MapType.normal,
+                        initialCameraPosition: cameraPosition,
+                        zoomControlsEnabled: true,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 10),
+
+                  // Tên rạp và địa chỉ
+                  Text(
+                    model.name,
+                    style: const TextStyle(fontSize: 18),
+                  ),
+                  const SizedBox(height: 10),
+                  Text(
+                    model.fullAddress,
+                    style: const TextStyle(
+                      fontSize: 16,
+                      color: Color(0xff999999),
+                    ),
+                  ),
+                  const SizedBox(height: 20),
+
+                  // Tiện ích
+                  const Text(
+                    "Available Facilities",
+                    style: TextStyle(fontSize: 16),
+                  ),
+                  const SizedBox(height: 10),
+                  Wrap(
+                    spacing: 10,
+                    children: model.facilities.map((facility) {
+                      return Chip(
+                        label: Text(
+                          facility,
+                          style: const TextStyle(color: Color(0xff444444)),
+                        ),
+                        backgroundColor: MyTheme.splash.withOpacity(0.1),
+                      );
+                    }).toList(),
+                  ),
+                ],
+              ),
+            ),
+
+            // Icon hiển thị vị trí GPS
+            Container(
+              height: 80,
+              child: Center(
+                child: CircleAvatar(
+                  backgroundColor: MyTheme.splash,
+                  radius: 40,
+                  child: SvgPicture.asset(
+                    "assets/icons/gps.svg",
+                    height: 40,
+                    width: 40,
+                  ),
+                ),
+              ),
+            ),
+          ],
+        );
+      },
     );
   }
 }

@@ -2,7 +2,6 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-
 namespace Backend.Models
 {
     public class Theatre
@@ -10,30 +9,39 @@ namespace Backend.Models
         public int Id { get; set; }
 
         [Required]
-        [Display(Name = "Tên rạp")]
-        public string Name { get; set; } = string.Empty;
+        public string Name { get; set; } = string.Empty; // Tên rạp
 
         [Required]
-        [Display(Name = "Địa chỉ đầy đủ")]
-        public string FullAddress { get; set; } = string.Empty;
+        public string FullAddress { get; set; } = string.Empty; // Địa chỉ đầy đủ
 
-        [Display(Name = "Tọa độ")]
-        public string? Coordinates { get; set; }
+        public string? Coordinates { get; set; } // Tọa độ GPS (latitude, longitude)
 
-        [Display(Name = "Tiện ích")]
-        public List<string> Facilities { get; set; } = new List<string>();
+        public string AvailableScreens { get; set; } = string.Empty; // Danh sách màn hình chiếu
 
-        [Display(Name = "Màn hình khả dụng")]
-        public string AvailableScreens { get; set; } = string.Empty; // Chuỗi phân cách bởi dấu phẩy
-
-        // Lấy danh sách màn hình từ chuỗi lưu trữ
         [NotMapped]
         public List<string> AvailableScreensList
         {
             get => !string.IsNullOrEmpty(AvailableScreens)
-                ? new List<string>(AvailableScreens.Split(',', StringSplitOptions.TrimEntries))
+                ? new List<string>(AvailableScreens.Split(',', System.StringSplitOptions.TrimEntries))
                 : new List<string>();
-            set => AvailableScreens = value != null ? string.Join(",", value) : string.Empty;
+            set => AvailableScreens = value != null ? string.Join(", ", value) : string.Empty;
         }
+
+        public string Facilities { get; set; } = string.Empty; // Tiện ích của rạp
+
+        [NotMapped]
+        public List<string> FacilityList
+        {
+            get => !string.IsNullOrEmpty(Facilities)
+                ? new List<string>(Facilities.Split(',', System.StringSplitOptions.TrimEntries))
+                : new List<string>();
+            set => Facilities = value != null ? string.Join(", ", value) : string.Empty;
+        }
+
+        public string? ContactNumber { get; set; } // Số điện thoại liên hệ
+
+        public string? City { get; set; } // Thành phố
+        public string? ImageUrl { get; set; }
+        public ICollection<Showtime> Showtimes { get; set; }
     }
 }

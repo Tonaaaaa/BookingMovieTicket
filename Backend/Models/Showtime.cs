@@ -8,37 +8,37 @@ namespace Backend.Models
     {
         public int Id { get; set; }
 
-        // Liên kết với phim
         [Required]
         [ForeignKey("Movie")]
         public int MovieId { get; set; }
-        public Movie? Movie { get; set; }
+        public Movie? Movie { get; set; } // Liên kết với phim
 
-        // Liên kết với rạp
         [Required]
         [ForeignKey("Theatre")]
         public int TheatreId { get; set; }
-        public Theatre? Theatre { get; set; }
+        public Theatre? Theatre { get; set; } // Liên kết với rạp
 
-        // Màn hình chiếu
         [Required]
-        public string Screen { get; set; } = string.Empty;
+        public string Screen { get; set; } = string.Empty; // Màn hình chiếu
 
-        // Thời gian bắt đầu suất chiếu
         [Required]
-        public DateTime StartTime { get; set; }
+        public DateTime StartTime { get; set; } // Thời gian bắt đầu
 
-        // Thời gian kết thúc (tính từ thời lượng phim)
         [NotMapped]
-        public DateTime EndTime
-        {
-            get => Movie != null
-                ? StartTime.AddMinutes(Movie.DurationInMinutes)
-                : StartTime;
-        }
+        public DateTime EndTime => Movie != null ? StartTime.AddMinutes(Movie.DurationInMinutes) : StartTime;
 
-        // Trạng thái suất chiếu
         [Required]
-        public string Status { get; set; } = "Active";
+        public string Format { get; set; } = "2D"; // Định dạng suất chiếu (2D, 3D, IMAX)
+
+        [Required]
+        public string ShowType { get; set; } = "Phụ đề"; // Loại suất chiếu (Phụ đề, Lồng tiếng)
+
+        [Required]
+        public int SeatCapacity { get; set; } = 200; // Tổng số ghế trong suất chiếu
+
+        public decimal TicketPrice { get; set; } = 100000; // Giá vé (VNĐ)
+
+        [Required]
+        public string Status { get; set; } = "Active"; // Trạng thái suất chiếu (Active, Cancelled)
     }
 }

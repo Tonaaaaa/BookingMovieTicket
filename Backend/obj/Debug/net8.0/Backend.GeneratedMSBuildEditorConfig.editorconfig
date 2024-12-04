@@ -18,6 +18,14 @@ build_property.GenerateRazorMetadataSourceChecksumAttributes =
 build_property.MSBuildProjectDirectory = C:\Users\tranv\OneDrive\Desktop\BookingMovieTicket\BookingMovieTicket\Backend
 build_property._RazorSourceGeneratorDebug = 
 
+[C:/Users/tranv/OneDrive/Desktop/BookingMovieTicket/BookingMovieTicket/Backend/Views/AdminActor/Create.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5BY3RvclxDcmVhdGUuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/tranv/OneDrive/Desktop/BookingMovieTicket/BookingMovieTicket/Backend/Views/AdminActor/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5BY3RvclxJbmRleC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
 [C:/Users/tranv/OneDrive/Desktop/BookingMovieTicket/BookingMovieTicket/Backend/Views/AdminMovie/Create.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5Nb3ZpZVxDcmVhdGUuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
@@ -32,6 +40,10 @@ build_metadata.AdditionalFiles.CssScope =
 
 [C:/Users/tranv/OneDrive/Desktop/BookingMovieTicket/BookingMovieTicket/Backend/Views/AdminShowtime/Create.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5TaG93dGltZVxDcmVhdGUuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/tranv/OneDrive/Desktop/BookingMovieTicket/BookingMovieTicket/Backend/Views/AdminShowtime/Edit.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5TaG93dGltZVxFZGl0LmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
 [C:/Users/tranv/OneDrive/Desktop/BookingMovieTicket/BookingMovieTicket/Backend/Views/AdminShowtime/Index.cshtml]

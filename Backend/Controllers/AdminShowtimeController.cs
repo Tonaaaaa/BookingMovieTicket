@@ -2,6 +2,7 @@ using Backend.Models;
 using Backend.Services;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Backend.Controllers
@@ -12,7 +13,10 @@ namespace Backend.Controllers
         private readonly IMovieService _movieService;
         private readonly ITheatreService _theatreService;
 
-        public AdminShowtimeController(IShowtimeService showtimeService, IMovieService movieService, ITheatreService theatreService)
+        public AdminShowtimeController(
+            IShowtimeService showtimeService,
+            IMovieService movieService,
+            ITheatreService theatreService)
         {
             _showtimeService = showtimeService;
             _movieService = movieService;
@@ -33,8 +37,19 @@ namespace Backend.Controllers
         {
             ViewBag.Movies = await _movieService.GetAllMoviesAsync();
             ViewBag.Theatres = await _theatreService.GetAllTheatresAsync();
-            ViewBag.Screens = new List<string> { "2D", "3D", "IMAX", "4DX" };
             return View();
+        }
+
+        // API để lấy danh sách màn hình khả dụng theo rạp
+        [HttpGet]
+        public async Task<JsonResult> GetScreensByTheatre(int theatreId)
+        {
+            var theatre = await _theatreService.GetTheatreByIdAsync(theatreId);
+            if (theatre == null)
+            {
+                return Json(new List<string>());
+            }
+            return Json(theatre.AvailableScreensList);
         }
 
         // Tạo suất chiếu (POST)
@@ -42,17 +57,19 @@ namespace Backend.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(Showtime showtime)
         {
-            var theatre = await _theatreService.GetTheatreByIdAsync(showtime.TheatreId);
-            if (theatre == null)
+            if (!ModelState.IsValid)
             {
-                ModelState.AddModelError("", "Rạp không tồn tại.");
+                ViewBag.Movies = await _movieService.GetAllMoviesAsync();
+                ViewBag.Theatres = await _theatreService.GetAllTheatresAsync();
                 return View(showtime);
             }
 
-            var availableScreens = theatre.AvailableScreensList;
-            if (!availableScreens.Contains(showtime.Screen))
+            var theatre = await _theatreService.GetTheatreByIdAsync(showtime.TheatreId);
+            if (theatre == null || !theatre.AvailableScreensList.Contains(showtime.Screen))
             {
                 ModelState.AddModelError("Screen", "Màn hình không khả dụng tại rạp đã chọn.");
+                ViewBag.Movies = await _movieService.GetAllMoviesAsync();
+                ViewBag.Theatres = await _theatreService.GetAllTheatresAsync();
                 return View(showtime);
             }
 
@@ -70,6 +87,8 @@ namespace Backend.Controllers
 
             ViewBag.Movies = await _movieService.GetAllMoviesAsync();
             ViewBag.Theatres = await _theatreService.GetAllTheatresAsync();
+            ViewBag.SelectedScreens = showtime.Theatre?.AvailableScreensList;
+
             return View(showtime);
         }
 
@@ -81,15 +100,24 @@ namespace Backend.Controllers
             if (id != showtime.Id)
                 return NotFound();
 
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
-                await _showtimeService.UpdateShowtimeAsync(showtime);
-                return RedirectToAction(nameof(Index));
+                ViewBag.Movies = await _movieService.GetAllMoviesAsync();
+                ViewBag.Theatres = await _theatreService.GetAllTheatresAsync();
+                return View(showtime);
             }
 
-            ViewBag.Movies = await _movieService.GetAllMoviesAsync();
-            ViewBag.Theatres = await _theatreService.GetAllTheatresAsync();
-            return View(showtime);
+            var theatre = await _theatreService.GetTheatreByIdAsync(showtime.TheatreId);
+            if (theatre == null || !theatre.AvailableScreensList.Contains(showtime.Screen))
+            {
+                ModelState.AddModelError("Screen", "Màn hình không khả dụng tại rạp đã chọn.");
+                ViewBag.Movies = await _movieService.GetAllMoviesAsync();
+                ViewBag.Theatres = await _theatreService.GetAllTheatresAsync();
+                return View(showtime);
+            }
+
+            await _showtimeService.UpdateShowtimeAsync(showtime);
+            return RedirectToAction(nameof(Index));
         }
 
         // Xóa suất chiếu

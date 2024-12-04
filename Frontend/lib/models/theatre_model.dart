@@ -1,35 +1,65 @@
-import 'package:google_maps_flutter/google_maps_flutter.dart';
-
 class Theatre {
-  final String id;
+  final int id;
   final String name;
-  final LatLng coordinates;
-  final List<String> facilities;
   final String fullAddress;
-  final List<String> timings;
+  final String? coordinates;
+  final List<String> facilities;
   final List<String> availableScreens;
+  final String? contactNumber;
+  final String? city;
+  final String? imageUrl;
 
   Theatre({
     required this.id,
     required this.name,
-    required this.coordinates,
-    required this.facilities,
     required this.fullAddress,
-    required this.timings,
+    this.coordinates,
+    required this.facilities,
     required this.availableScreens,
+    this.contactNumber,
+    this.city,
+    this.imageUrl,
   });
 
   factory Theatre.fromJson(Map<String, dynamic> json) {
-    final coordinates = json['coordinates'].split(',');
+    String? baseUrl = "http://10.0.2.2:5130";
+    String? imageUrl = json['ImageUrl'] != null
+        ? Uri.parse(baseUrl).resolve(json['ImageUrl']).toString()
+        : null;
+
+    final facilities = (json['FacilityList'] as List?)
+            ?.map((e) => e.toString().trim())
+            .toList() ??
+        [];
+    final availableScreens = (json['AvailableScreensList'] as List?)
+            ?.map((e) => e.toString().trim())
+            .toList() ??
+        [];
+
     return Theatre(
-      id: json['id'],
-      name: json['name'],
-      coordinates:
-          LatLng(double.parse(coordinates[0]), double.parse(coordinates[1])),
-      facilities: List<String>.from(json['facilities']),
-      fullAddress: json['fullAddress'],
-      timings: List<String>.from(json['timings']),
-      availableScreens: List<String>.from(json['availableScreens']),
+      id: json['Id'],
+      name: json['Name'] ?? 'Unknown',
+      fullAddress: json['FullAddress'] ?? '',
+      coordinates: json['Coordinates'],
+      facilities: facilities,
+      availableScreens: availableScreens,
+      contactNumber: json['ContactNumber'],
+      city: json['City'],
+      imageUrl: imageUrl,
     );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'Id': id,
+      'Name': name,
+      'FullAddress': fullAddress,
+      'Coordinates': coordinates,
+      'FacilityList': facilities,
+      'AvailableScreensList': availableScreens,
+      'ContactNumber': contactNumber,
+      'City': city,
+      'ImageUrl': imageUrl,
+    };
   }
 }
