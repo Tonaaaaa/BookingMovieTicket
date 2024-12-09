@@ -3,7 +3,7 @@
 <h2 class="text-center mt-4">Danh Sách Suất Chiếu</h2>
 
 <div class="container mt-4">
-    <!-- Nút Thêm -->
+    <!-- Nút Thêm Suất Chiếu -->
     <div class="d-flex justify-content-end mb-4">
         <a asp-action="Create" class="btn btn-primary btn-lg">
             <i class="bi bi-plus-circle"></i> Thêm Suất Chiếu
@@ -18,7 +18,7 @@
                     <th>#</th>
                     <th>Phim</th>
                     <th>Rạp</th>
-                    <th>Màn Hình</th>
+                    <th>Phòng Chiếu</th>
                     <th>Thời Gian Bắt Đầu</th>
                     <th>Thời Gian Kết Thúc</th>
                     <th>Giá Vé</th>
@@ -32,35 +32,20 @@
                         <td>@showtime.Id</td>
                         <td>@showtime.Movie?.Title</td>
                         <td>@showtime.Theatre?.Name</td>
-                        <td>@showtime.Screen</td>
-                        <td>
-                            <div>
-                                <span>@showtime.StartTime.ToString("dd-MM-yyyy")</span><br />
-                                <span class="text-primary">@showtime.StartTime.ToString("HH:mm")</span>
-                            </div>
-                        </td>
-                        <td>
-                            <div>
-                                @if (showtime.Movie?.DurationInMinutes > 0)
-                                {
-                                    <span>@showtime.StartTime.AddMinutes(showtime.Movie.DurationInMinutes).ToString("dd-MM-yyyy")</span><br />
-                                    <span class="text-success">@showtime.StartTime.AddMinutes(showtime.Movie.DurationInMinutes).ToString("HH:mm")</span>
-                                }
-                                else
-                                {
-                                    <span class="text-muted">Không xác định</span>
-                                }
-                            </div>
-                        </td>
+                        <td>@showtime.Screen?.Name</td>
+                        <td>@showtime.StartTime.ToString("HH:mm dd/MM/yyyy")</td>
+                        <td>@showtime.EndTime.ToString("HH:mm dd/MM/yyyy")</td>
                         <td>@showtime.TicketPrice.ToString("C")</td>
                         <td>
-                            <a asp-action="Edit" asp-route-id="@showtime.Id" class="btn btn-warning btn-sm me-2">
-                                <i class="bi bi-pencil-square"></i> Sửa
-                            </a>
-                            <button type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#deleteModal" 
-                                data-id="@showtime.Id" data-name="@showtime.Movie?.Title">
-                                <i class="bi bi-trash"></i> Xóa
-                            </button>
+                            <div class="btn-group">
+                                <a asp-action="Edit" asp-route-id="@showtime.Id" class="btn btn-warning btn-sm me-2">
+                                    <i class="bi bi-pencil-square"></i> Sửa
+                                </a>
+                                <button type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#deleteModal"
+                                    data-id="@showtime.Id" data-name="@showtime.Movie?.Title">
+                                    <i class="bi bi-trash"></i> Xóa
+                                </button>
+                            </div>
                         </td>
                     </tr>
                 }
@@ -69,16 +54,16 @@
     </div>
 </div>
 
-<!-- Modal Xác Nhận Xóa -->
+<!-- Modal -->
 <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="deleteModalLabel">Xác Nhận Xóa</h5>
+                <h5 class="modal-title" id="deleteModalLabel">Xác nhận xóa</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                Bạn có chắc chắn muốn xóa suất chiếu cho phim <strong id="deleteMovieName"></strong>?
+                Bạn có chắc chắn muốn xóa suất chiếu của phim <strong id="itemName"></strong>?
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
@@ -99,7 +84,7 @@
         const id = button.getAttribute('data-id');
         const name = button.getAttribute('data-name');
 
-        document.getElementById('deleteMovieName').textContent = name || "không xác định";
+        document.getElementById('itemName').textContent = name;
         document.getElementById('deleteId').value = id;
     });
 </script>

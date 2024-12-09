@@ -20,8 +20,9 @@ namespace Backend.Repositories
         public async Task<List<Showtime>> GetAllShowtimesAsync()
         {
             return await _context.Showtimes
-                .Include(s => s.Movie)
-                .Include(s => s.Theatre)
+                .Include(s => s.Movie) // Liên kết với Movie
+                .Include(s => s.Theatre) // Liên kết với Theatre
+                .Include(s => s.Screen) // Liên kết với Screen
                 .ToListAsync();
         }
 

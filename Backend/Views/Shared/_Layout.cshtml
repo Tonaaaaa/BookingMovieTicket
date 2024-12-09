@@ -2,7 +2,8 @@
 <html lang="en">
   <head>
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <title>Kaiadmin - Bootstrap 5 Admin Dashboard</title>
+     <title>@ViewData["Title"] - Movie Ticket Booking</title>
+     @RenderSection("Styles", required: false)
     <meta
       content="width=device-width, initial-scale=1.0, shrink-to-fit=no"
       name="viewport"
@@ -219,48 +220,48 @@
                   </ul>
                 </div>
               </li>
-              @* <li class="nav-item">
+              <li class="nav-item">
                 <a data-bs-toggle="collapse" href="#maps">
                   <i class="fas fa-map-marker-alt"></i>
-                  <p>Maps</p>
+                  <p>Phòng chiếu</p>
                   <span class="caret"></span>
                 </a>
                 <div class="collapse" id="maps">
                   <ul class="nav nav-collapse">
                     <li>
-                      <a href="maps/googlemaps.html">
-                        <span class="sub-item">Google Maps</span>
+                      <a href="http://localhost:5130/AdminScreen/">
+                        <span class="sub-item">Danh sách phòng chiếu</span>
                       </a>
                     </li>
                     <li>
-                      <a href="maps/jsvectormap.html">
-                        <span class="sub-item">Jsvectormap</span>
+                      <a href="http://localhost:5130/AdminScreen/Create">
+                        <span class="sub-item">Tạo phòng chiếu</span>
                       </a>
                     </li>
                   </ul>
                 </div>
-              </li> *@
-              @* <li class="nav-item">
+              </li>
+              <li class="nav-item">
                 <a data-bs-toggle="collapse" href="#charts">
                   <i class="far fa-chart-bar"></i>
-                  <p>Charts</p>
+                  <p>Chổ ngồi</p>
                   <span class="caret"></span>
                 </a>
                 <div class="collapse" id="charts">
                   <ul class="nav nav-collapse">
                     <li>
-                      <a href="charts/charts.html">
-                        <span class="sub-item">Chart Js</span>
+                      <a href="http://localhost:5130/AdminSeat/">
+                        <span class="sub-item">Danh sách chổ ngồi</span>
                       </a>
                     </li>
                     <li>
-                      <a href="charts/sparkline.html">
-                        <span class="sub-item">Sparkline</span>
+                      <a href="http://localhost:5130/AdminSeat/Create">
+                        <span class="sub-item">Tạo chổ ngồi</span>
                       </a>
                     </li>
                   </ul>
                 </div>
-              </li> *@
+              </li>
               @* <li class="nav-item">
                 <a href="widgets.html">
                   <i class="fas fa-desktop"></i>

@@ -5,8 +5,12 @@
       "PackagePath": "staticwebassets\\Backend.bundle.scp.css"
     },
     {
-      "Id": "C:\\Users\\tranv\\OneDrive\\Desktop\\BookingMovieTicket\\BookingMovieTicket\\Backend\\wwwroot\\Actor\\Tona1-cf5e2c07-1d9f-4f00-9740-468d2b6d526c.jpg",
-      "PackagePath": "staticwebassets\\Actor\\Tona1-cf5e2c07-1d9f-4f00-9740-468d2b6d526c.jpg"
+      "Id": "C:\\Users\\tranv\\OneDrive\\Desktop\\BookingMovieTicket\\BookingMovieTicket\\Backend\\wwwroot\\actor\\Tona1-cf5e2c07-1d9f-4f00-9740-468d2b6d526c.jpg",
+      "PackagePath": "staticwebassets\\actor\\Tona1-cf5e2c07-1d9f-4f00-9740-468d2b6d526c.jpg"
+    },
+    {
+      "Id": "C:\\Users\\tranv\\OneDrive\\Desktop\\BookingMovieTicket\\BookingMovieTicket\\Backend\\wwwroot\\actor\\set-vt2-9ecc7971-41d1-43a2-8976-f44b920bbaed.jpg",
+      "PackagePath": "staticwebassets\\actor\\set-vt2-9ecc7971-41d1-43a2-8976-f44b920bbaed.jpg"
     },
     {
       "Id": "C:\\Users\\tranv\\OneDrive\\Desktop\\BookingMovieTicket\\BookingMovieTicket\\Backend\\wwwroot\\css\\bootstrap.min.css",
@@ -55,6 +59,10 @@
     {
       "Id": "C:\\Users\\tranv\\OneDrive\\Desktop\\BookingMovieTicket\\BookingMovieTicket\\Backend\\wwwroot\\favicon.ico",
       "PackagePath": "staticwebassets\\favicon.ico"
+    },
+    {
+      "Id": "C:\\Users\\tranv\\OneDrive\\Desktop\\BookingMovieTicket\\BookingMovieTicket\\Backend\\wwwroot\\film\\SPIDER-MAN_ NO WAY HOME - Official Trailer (HD).mp4",
+      "PackagePath": "staticwebassets\\film\\SPIDER-MAN_ NO WAY HOME - Official Trailer (HD).mp4"
     },
     {
       "Id": "C:\\Users\\tranv\\OneDrive\\Desktop\\BookingMovieTicket\\BookingMovieTicket\\Backend\\wwwroot\\film\\Tona.jpg",
@@ -1641,8 +1649,32 @@
       "PackagePath": "staticwebassets\\js\\setting-demo2.js"
     },
     {
+      "Id": "C:\\Users\\tranv\\OneDrive\\Desktop\\BookingMovieTicket\\BookingMovieTicket\\Backend\\wwwroot\\theatre\\CGV-64319e48-33aa-4f67-ba54-7387b7ac149c.png",
+      "PackagePath": "staticwebassets\\theatre\\CGV-64319e48-33aa-4f67-ba54-7387b7ac149c.png"
+    },
+    {
+      "Id": "C:\\Users\\tranv\\OneDrive\\Desktop\\BookingMovieTicket\\BookingMovieTicket\\Backend\\wwwroot\\theatre\\CGV-8c85a582-d7b0-4866-9448-1e4e350ce98e.png",
+      "PackagePath": "staticwebassets\\theatre\\CGV-8c85a582-d7b0-4866-9448-1e4e350ce98e.png"
+    },
+    {
+      "Id": "C:\\Users\\tranv\\OneDrive\\Desktop\\BookingMovieTicket\\BookingMovieTicket\\Backend\\wwwroot\\theatre\\CGV-eb075404-2baf-41ab-9f2b-f8e67df5abdd.png",
+      "PackagePath": "staticwebassets\\theatre\\CGV-eb075404-2baf-41ab-9f2b-f8e67df5abdd.png"
+    },
+    {
       "Id": "C:\\Users\\tranv\\OneDrive\\Desktop\\BookingMovieTicket\\BookingMovieTicket\\Backend\\wwwroot\\theatre\\CGV.png",
       "PackagePath": "staticwebassets\\theatre\\CGV.png"
+    },
+    {
+      "Id": "C:\\Users\\tranv\\OneDrive\\Desktop\\BookingMovieTicket\\BookingMovieTicket\\Backend\\wwwroot\\uploads\\Doraemon.jpg",
+      "PackagePath": "staticwebassets\\uploads\\Doraemon.jpg"
+    },
+    {
+      "Id": "C:\\Users\\tranv\\OneDrive\\Desktop\\BookingMovieTicket\\BookingMovieTicket\\Backend\\wwwroot\\uploads\\test2.mp4",
+      "PackagePath": "staticwebassets\\uploads\\test2.mp4"
+    },
+    {
+      "Id": "C:\\Users\\tranv\\OneDrive\\Desktop\\BookingMovieTicket\\BookingMovieTicket\\Backend\\wwwroot\\uploads\\tải xuống.jpg",
+      "PackagePath": "staticwebassets\\uploads\\tải xuống.jpg"
     },
     {
       "Id": "obj\\Debug\\net8.0\\staticwebassets\\msbuild.Backend.Microsoft.AspNetCore.StaticWebAssets.props",

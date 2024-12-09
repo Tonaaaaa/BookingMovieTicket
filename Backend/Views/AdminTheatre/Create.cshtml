@@ -14,10 +14,44 @@
                 <span asp-validation-for="Name" class="text-danger"></span>
             </div>
 
-            <!-- Địa chỉ -->
+            <!-- Số nhà và đường -->
             <div class="col-md-6">
-                <label asp-for="FullAddress" class="form-label fw-bold">Địa chỉ</label>
-                <input asp-for="FullAddress" class="form-control" placeholder="Nhập địa chỉ đầy đủ..." />
+                <label class="form-label fw-bold">Số nhà và đường</label>
+                <input id="specificAddress" class="form-control" placeholder="Nhập số nhà và đường..." />
+            </div>
+
+            <!-- Tỉnh/Thành phố -->
+            <div class="col-md-6">
+                <label class="form-label fw-bold">Tỉnh/Thành phố</label>
+                <select id="provinceDropdown" class="form-control">
+                    <option value="">Chọn tỉnh/thành phố</option>
+                    @foreach (var province in ViewBag.Provinces as List<Backend.Models.Province>)
+                    {
+                        <option value="@province.Code">@province.Name</option>
+                    }
+                </select>
+            </div>
+
+            <!-- Quận/Huyện -->
+            <div class="col-md-6">
+                <label class="form-label fw-bold">Quận/Huyện</label>
+                <select id="districtDropdown" class="form-control">
+                    <option value="">Chọn quận/huyện</option>
+                </select>
+            </div>
+
+            <!-- Phường/Xã -->
+            <div class="col-md-6">
+                <label class="form-label fw-bold">Phường/Xã</label>
+                <select id="wardDropdown" class="form-control">
+                    <option value="">Chọn phường/xã</option>
+                </select>
+            </div>
+
+            <!-- Địa chỉ đầy đủ -->
+            <div class="col-md-6">
+                <label asp-for="FullAddress" class="form-label fw-bold">Địa chỉ đầy đủ</label>
+                <input asp-for="FullAddress" id="fullAddress" class="form-control" readonly />
                 <span asp-validation-for="FullAddress" class="text-danger"></span>
             </div>
 
@@ -29,20 +63,6 @@
                     <img id="imagePreview" src="#" alt="Preview" 
                          style="display: none; width: 200px; height: 150px; object-fit: cover; border: 1px solid #ddd; border-radius: 5px;" />
                 </div>
-            </div>
-
-            <!-- Tọa độ -->
-            <div class="col-md-6">
-                <label asp-for="Coordinates" class="form-label fw-bold">Tọa độ (vĩ độ, kinh độ)</label>
-                <input asp-for="Coordinates" class="form-control" placeholder="Nhập tọa độ (ví dụ: 10.7769, 106.7009)" />
-                <span asp-validation-for="Coordinates" class="text-danger"></span>
-            </div>
-
-            <!-- Tiện ích -->
-            <div class="col-md-6">
-                <label asp-for="Facilities" class="form-label fw-bold">Tiện ích</label>
-                <textarea asp-for="Facilities" class="form-control" rows="2" placeholder="Nhập tiện ích, cách nhau bởi dấu phẩy..."></textarea>
-                <span asp-validation-for="Facilities" class="text-danger"></span>
             </div>
 
             <!-- Loại màn hình -->
@@ -73,19 +93,67 @@
 </div>
 
 <script>
+    // Tự động cập nhật địa chỉ đầy đủ
+    function updateFullAddress() {
+        const specificAddress = document.getElementById('specificAddress').value;
+        const province = document.getElementById('provinceDropdown').selectedOptions[0]?.text;
+        const district = document.getElementById('districtDropdown').selectedOptions[0]?.text;
+        const ward = document.getElementById('wardDropdown').selectedOptions[0]?.text;
+        const fullAddressField = document.getElementById('fullAddress');
+        fullAddressField.value = `${specificAddress || ''}, ${ward || ''}, ${district || ''}, ${province || ''}`.replace(/^,|,$/g, '');
+    }
+
+    // Lấy danh sách quận/huyện từ tỉnh
+    document.getElementById('provinceDropdown').addEventListener('change', async function () {
+        const provinceCode = this.value;
+        const response = await fetch(`/AdminTheatre/GetDistricts?provinceCode=${provinceCode}`);
+        const districts = await response.json();
+
+        const districtDropdown = document.getElementById('districtDropdown');
+        districtDropdown.innerHTML = '<option value="">Chọn quận/huyện</option>';
+        districts.forEach(d => {
+            districtDropdown.innerHTML += `<option value="${d.code}">${d.name}</option>`;
+        });
+
+        document.getElementById('wardDropdown').innerHTML = '<option value="">Chọn phường/xã</option>';
+        updateFullAddress();
+    });
+
+    // Lấy danh sách phường/xã từ quận
+    document.getElementById('districtDropdown').addEventListener('change', async function () {
+        const districtCode = this.value;
+        const response = await fetch(`/AdminTheatre/GetWards?districtCode=${districtCode}`);
+        const wards = await response.json();
+
+        const wardDropdown = document.getElementById('wardDropdown');
+        wardDropdown.innerHTML = '<option value="">Chọn phường/xã</option>';
+        wards.forEach(w => {
+            wardDropdown.innerHTML += `<option value="${w.code}">${w.name}</option>`;
+        });
+
+        updateFullAddress();
+    });
+
+    // Cập nhật địa chỉ khi chọn phường/xã
+    document.getElementById('wardDropdown').addEventListener('change', updateFullAddress);
+
+    // Cập nhật địa chỉ khi nhập số nhà và đường
+    document.getElementById('specificAddress').addEventListener('input', updateFullAddress);
+
+    // Xem trước ảnh
     function previewImage(event) {
         const file = event.target.files[0];
         const preview = document.getElementById('imagePreview');
         if (file) {
             const reader = new FileReader();
-            reader.onload = function(e) {
-                preview.src = e.target.result; // Gán đường dẫn ảnh
-                preview.style.display = 'block'; // Hiển thị thẻ <img>
+            reader.onload = function (e) {
+                preview.src = e.target.result;
+                preview.style.display = 'block';
             };
             reader.readAsDataURL(file);
         } else {
-            preview.src = ""; // Xóa đường dẫn ảnh
-            preview.style.display = 'none'; // Ẩn thẻ <img>
+            preview.src = "";
+            preview.style.display = 'none';
         }
     }
 </script>

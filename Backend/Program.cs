@@ -5,7 +5,6 @@ using Microsoft.EntityFrameworkCore;
 using Backend.Extention;
 using System.Text.Json.Serialization;
 
-
 var builder = WebApplication.CreateBuilder(args);
 
 // Cấu hình CORS để chấp nhận tất cả yêu cầu từ mọi nguồn gốc (nếu đang phát triển)
@@ -19,6 +18,9 @@ builder.Services.AddCors(options =>
     });
 });
 
+// Đăng ký HttpClient
+builder.Services.AddHttpClient();
+
 // Cấu hình DbContext và chuỗi kết nối
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseMySql(
@@ -30,6 +32,8 @@ builder.Services.AddScoped<IMovieService, MovieRepository>();
 builder.Services.AddScoped<ITheatreService, TheatreRepository>();
 builder.Services.AddScoped<IShowtimeService, ShowtimeRepository>();
 builder.Services.AddScoped<IActorService, ActorRepository>();
+builder.Services.AddScoped<IScreenService, ScreenRepository>();
+builder.Services.AddScoped<ISeatService, SeatRepository>();
 
 // Thêm cấu hình JSON để xử lý chu kỳ tham chiếu và định dạng dữ liệu
 builder.Services.AddControllersWithViews()

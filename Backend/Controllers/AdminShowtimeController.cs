@@ -12,18 +12,20 @@ namespace Backend.Controllers
         private readonly IShowtimeService _showtimeService;
         private readonly IMovieService _movieService;
         private readonly ITheatreService _theatreService;
+        private readonly IScreenService _screenService;
 
         public AdminShowtimeController(
             IShowtimeService showtimeService,
             IMovieService movieService,
-            ITheatreService theatreService)
+            ITheatreService theatreService,
+            IScreenService screenService)
         {
             _showtimeService = showtimeService;
             _movieService = movieService;
             _theatreService = theatreService;
+            _screenService = screenService;
         }
 
-        // Hiển thị danh sách suất chiếu
         [HttpGet]
         public async Task<IActionResult> Index()
         {
@@ -31,7 +33,6 @@ namespace Backend.Controllers
             return View(showtimes);
         }
 
-        // Tạo suất chiếu (GET)
         [HttpGet]
         public async Task<IActionResult> Create()
         {
@@ -40,19 +41,14 @@ namespace Backend.Controllers
             return View();
         }
 
-        // API để lấy danh sách màn hình khả dụng theo rạp
         [HttpGet]
         public async Task<JsonResult> GetScreensByTheatre(int theatreId)
         {
-            var theatre = await _theatreService.GetTheatreByIdAsync(theatreId);
-            if (theatre == null)
-            {
-                return Json(new List<string>());
-            }
-            return Json(theatre.AvailableScreensList);
+            var screens = await _screenService.GetScreensByTheatreIdAsync(theatreId);
+            var screenOptions = screens.Select(s => new { id = s.Id, name = s.Name }).ToList();
+            return Json(screenOptions);
         }
 
-        // Tạo suất chiếu (POST)
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(Showtime showtime)
@@ -64,10 +60,10 @@ namespace Backend.Controllers
                 return View(showtime);
             }
 
-            var theatre = await _theatreService.GetTheatreByIdAsync(showtime.TheatreId);
-            if (theatre == null || !theatre.AvailableScreensList.Contains(showtime.Screen))
+            var screens = await _screenService.GetScreensByTheatreIdAsync(showtime.TheatreId);
+            if (!screens.Any(s => s.Id == showtime.ScreenId))
             {
-                ModelState.AddModelError("Screen", "Màn hình không khả dụng tại rạp đã chọn.");
+                ModelState.AddModelError("ScreenId", "Phòng chiếu không hợp lệ cho rạp đã chọn.");
                 ViewBag.Movies = await _movieService.GetAllMoviesAsync();
                 ViewBag.Theatres = await _theatreService.GetAllTheatresAsync();
                 return View(showtime);
@@ -77,7 +73,6 @@ namespace Backend.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        // Chỉnh sửa suất chiếu (GET)
         [HttpGet]
         public async Task<IActionResult> Edit(int id)
         {
@@ -87,12 +82,9 @@ namespace Backend.Controllers
 
             ViewBag.Movies = await _movieService.GetAllMoviesAsync();
             ViewBag.Theatres = await _theatreService.GetAllTheatresAsync();
-            ViewBag.SelectedScreens = showtime.Theatre?.AvailableScreensList;
-
             return View(showtime);
         }
 
-        // Chỉnh sửa suất chiếu (POST)
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, Showtime showtime)
@@ -107,10 +99,10 @@ namespace Backend.Controllers
                 return View(showtime);
             }
 
-            var theatre = await _theatreService.GetTheatreByIdAsync(showtime.TheatreId);
-            if (theatre == null || !theatre.AvailableScreensList.Contains(showtime.Screen))
+            var screens = await _screenService.GetScreensByTheatreIdAsync(showtime.TheatreId);
+            if (!screens.Any(s => s.Id == showtime.ScreenId))
             {
-                ModelState.AddModelError("Screen", "Màn hình không khả dụng tại rạp đã chọn.");
+                ModelState.AddModelError("ScreenId", "Phòng chiếu không hợp lệ cho rạp đã chọn.");
                 ViewBag.Movies = await _movieService.GetAllMoviesAsync();
                 ViewBag.Theatres = await _theatreService.GetAllTheatresAsync();
                 return View(showtime);
@@ -120,15 +112,10 @@ namespace Backend.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        // Xóa suất chiếu
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Delete(int id)
         {
-            var showtime = await _showtimeService.GetShowtimeByIdAsync(id);
-            if (showtime == null)
-                return NotFound();
-
             await _showtimeService.DeleteShowtimeAsync(id);
             return RedirectToAction(nameof(Index));
         }

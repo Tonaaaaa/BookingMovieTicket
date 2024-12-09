@@ -71,6 +71,7 @@ namespace Backend.Models
 
         // Phân loại độ tuổi (VD: "P", "C13", "C18")
         public string? AgeRating { get; set; } = "P";
-         public ICollection<Showtime> Showtimes { get; set; }
+          public ICollection<Showtime> Showtimes { get; set; } = new List<Showtime>();
+         
     }
 }

@@ -11,5 +11,6 @@ namespace Backend.Services
         Task AddTheatreAsync(Theatre theatre);
         Task UpdateTheatreAsync(Theatre theatre);
         Task DeleteTheatreAsync(int id);
+        
     }
 }

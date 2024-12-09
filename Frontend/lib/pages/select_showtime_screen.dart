@@ -1,3 +1,4 @@
+import 'package:bookingmovieticket/pages/select_seat_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../controllers/showtime_controller.dart';
@@ -265,8 +266,7 @@ class _ShowtimeSelectorScreenState extends State<ShowtimeSelectorScreen> {
                       borderRadius: BorderRadius.circular(8),
                       image: DecorationImage(
                         image: NetworkImage(
-                          movie!.bannerUrl!
-                              .replaceFirst('localhost', '10.0.2.2'),
+                          _getFullImageUrl(movie!.bannerUrl!),
                         ),
                         fit: BoxFit.cover,
                       ),
@@ -330,7 +330,12 @@ class _ShowtimeSelectorScreenState extends State<ShowtimeSelectorScreen> {
                 final endTime = formatTime(showtime.endTime);
                 return ElevatedButton(
                   onPressed: () {
-                    print("Selected Showtime: ${showtime.startTime}");
+                    // Chuyển sang SeatSelectionPage
+                    Get.to(() => SeatSelectionPage(
+                          screenId: showtime.screenId,
+                          screenName: showtime.screen,
+                          theatreName: widget.theatreName,
+                        ));
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.white,
@@ -385,5 +390,10 @@ class _ShowtimeSelectorScreenState extends State<ShowtimeSelectorScreen> {
       default:
         return Colors.grey;
     }
+  }
+
+  String _getFullImageUrl(String bannerUrl) {
+    const baseUrl = "http://10.0.2.2:5130"; // Thay đổi nếu cần
+    return bannerUrl.startsWith("/") ? "$baseUrl$bannerUrl" : bannerUrl;
   }
 }

@@ -1,12 +1,23 @@
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Backend.Models
 {
     public class Screen
     {
-        
+        public int Id { get; set; } // ID phòng chiếu
+
+        [Required]
+        public string Name { get; set; } = string.Empty; // Tên phòng chiếu
+
+        [Required]
+        public int TheatreId { get; set; } // Thuộc rạp nào
+        public Theatre Theatre { get; set; } = null!;
+
+        [Required]
+        public int SeatCapacity { get; set; } = 100; // Số lượng ghế
+
+        public ICollection<Showtime> Showtimes { get; set; } = new List<Showtime>();
     }
 }

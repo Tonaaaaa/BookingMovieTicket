@@ -12,8 +12,8 @@ class Showtime {
   final int seatCapacity;
   final double ticketPrice;
   final String status;
-
-  final Movie? movie; // Liên kết với model Movie
+  final int screenId;
+  final Movie? movie;
 
   Showtime({
     required this.id,
@@ -27,6 +27,7 @@ class Showtime {
     required this.seatCapacity,
     required this.ticketPrice,
     required this.status,
+    required this.screenId,
     this.movie,
   });
 
@@ -43,6 +44,7 @@ class Showtime {
       seatCapacity: json['SeatCapacity'] ?? 0,
       ticketPrice: (json['TicketPrice'] as num?)?.toDouble() ?? 0.0,
       status: json['Status'] ?? 'Inactive',
+      screenId: json['ScreenId'] ?? 0,
       movie: json['Movie'] != null ? Movie.fromJson(json['Movie']) : null,
     );
   }
@@ -60,6 +62,7 @@ class Showtime {
       'SeatCapacity': seatCapacity,
       'TicketPrice': ticketPrice,
       'Status': status,
+      'ScreenId': screenId,
       'Movie': movie?.toJson(),
     };
   }

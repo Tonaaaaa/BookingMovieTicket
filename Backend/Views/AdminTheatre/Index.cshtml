@@ -12,79 +12,73 @@
 
     <!-- Bảng Danh Sách Rạp -->
     <div class="table-responsive">
-        <table class="table table-hover table-striped align-middle">
+        <table class="table table-bordered table-hover align-middle">
             <thead class="table-dark">
                 <tr>
-                    <th>#</th>
-                    <th>Hình Ảnh</th>
-                    <th>Tên Rạp</th>
-                    <th>Địa Chỉ</th>
-                    <th>Tiện Ích</th>
-                    <th>Màn Hình</th>
-                    <th>Thao Tác</th>
+                    <th class="text-center" style="width: 5%;">#</th>
+                    <th class="text-center" style="width: 10%;">Hình Ảnh</th>
+                    <th style="width: 20%;">Tên Rạp</th>
+                    <th style="width: 30%;">Địa Chỉ</th>
+                    <th class="text-center" style="width: 15%;">Màn Hình</th>
+                    <th class="text-center" style="width: 20%;">Thao Tác</th>
                 </tr>
             </thead>
             <tbody>
-                @foreach (var theatre in Model)
+                @if (Model != null && Model.Any())
                 {
-                    <tr>
-                        <!-- Số thứ tự -->
-                        <td>@theatre.Id</td>
+                    @foreach (var theatre in Model)
+                    {
+                        <tr>
+                            <!-- Số thứ tự -->
+                            <td class="text-center">@theatre.Id</td>
 
-                        <!-- Hình ảnh -->
-                        <td class="text-center">
-                            @if (!string.IsNullOrEmpty(theatre.ImageUrl))
-                            {
-                                <img src="@theatre.ImageUrl" alt="@theatre.Name" class="img-fluid rounded-circle" 
-                                     style="width: 50px; height: 50px; object-fit: cover; border: 1px solid #ddd;" />
-                            }
-                            else
-                            {
-                                <i class="bi bi-building fs-3 text-muted"></i>
-                            }
-                        </td>
-
-                        <!-- Tên rạp -->
-                        <td>
-                            <strong>@theatre.Name</strong>
-                        </td>
-
-                        <!-- Địa chỉ -->
-                        <td>@theatre.FullAddress</td>
-
-                        <!-- Tiện ích -->
-                        <td>
-                            @if (theatre.FacilityList != null && theatre.FacilityList.Any())
-                            {
-                                @foreach (var facility in theatre.FacilityList)
+                            <!-- Hình ảnh -->
+                            <td class="text-center">
+                                @if (!string.IsNullOrEmpty(theatre.ImageUrl))
                                 {
-                                    <span class="badge bg-success me-1">@facility.Trim()</span>
+                                    <img src="@theatre.ImageUrl" alt="@theatre.Name" class="img-fluid rounded" 
+                                         style="width: 70px; height: 50px; object-fit: cover;" />
                                 }
-                            }
-                            else
-                            {
-                                <span class="text-muted">Không có</span>
-                            }
-                        </td>
-
-                        <!-- Màn hình -->
-                        <td>
-                            @if (theatre.AvailableScreensList != null && theatre.AvailableScreensList.Any())
-                            {
-                                @foreach (var screen in theatre.AvailableScreensList)
+                                else
                                 {
-                                    <span class="badge bg-info me-1">@screen</span>
+                                    <i class="bi bi-building fs-3 text-muted"></i>
                                 }
-                            }
-                            else
-                            {
-                                <span class="text-muted">Không có</span>
-                            }
-                        </td>
+                            </td>
 
-                        <!-- Thao tác -->
-                        <td class="text-center">
-                            <div class="btn-group">
+                            <!-- Tên rạp -->
+                            <td>
+                                <strong>@theatre.Name</strong>
+                            </td>
+
+                            <!-- Địa chỉ -->
+                            <td>
+                                @if (!string.IsNullOrEmpty(theatre.FullAddress))
+                                {
+                                    @theatre.FullAddress
+                                }
+                                else
+                                {
+                                    <span class="text-muted">Không có địa chỉ</span>
+                                }
+                            </td>
+
+                            <!-- Màn hình -->
+                            <td class="text-center">
+                                @if (theatre.AvailableScreensList != null && theatre.AvailableScreensList.Any())
+                                {
+                                    @foreach (var screen in theatre.AvailableScreensList)
+                                    {
+                                        <span class="badge bg-info">@screen</span>
+                                    }
+                                }
+                                else
+                                {
+                                    <span class="text-muted">Không có</span>
+                                }
+                            </td>
+
+                            <!-- Thao tác -->
+                            <td class="text-center">
                                 <a asp-action="Edit" asp-route-id="@theatre.Id" class="btn btn-warning btn-sm me-2">
                                     <i class="bi bi-pencil-square"></i> Sửa
                                 </a>
@@ -92,8 +86,14 @@
                                     data-id="@theatre.Id" data-name="@theatre.Name">
                                     <i class="bi bi-trash"></i> Xóa
                                 </button>
-                            </div>
-                        </td>
+                            </td>
+                        </tr>
+                    }
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="6" class="text-center text-muted">Không có rạp nào để hiển thị.</td>
                     </tr>
                 }
             </tbody>
@@ -125,6 +125,7 @@
 </div>
 
 <script>
+    // Gán dữ liệu cho modal xóa
     const deleteModal = document.getElementById('deleteModal');
     deleteModal.addEventListener('show.bs.modal', function (event) {
         const button = event.relatedTarget;

@@ -34,35 +34,49 @@ namespace Backend.Controllers
         }
 
         // Tạo diễn viên mới (POST)
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(Actor actor, IFormFile ProfilePicture)
-        {
-            if (ModelState.IsValid)
-                return View(actor);
-
-            if (ProfilePicture != null && ProfilePicture.Length > 0)
+            [HttpPost]
+            [ValidateAntiForgeryToken]
+            public async Task<IActionResult> Create(Actor actor, IFormFile ProfilePicture)
             {
-                var uploadPath = Path.Combine(_environment.WebRootPath, "actor");
-                if (!Directory.Exists(uploadPath))
+                if (!ModelState.IsValid)
                 {
-                    Directory.CreateDirectory(uploadPath);
+                    var errors = ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage).ToList();
+                    Console.WriteLine("ModelState Errors: " + string.Join(", ", errors));
+                    return View(actor);
                 }
 
-                var fileName = $"{Path.GetFileNameWithoutExtension(ProfilePicture.FileName)}-{Guid.NewGuid()}{Path.GetExtension(ProfilePicture.FileName)}";
-                var filePath = Path.Combine(uploadPath, fileName);
-
-                using (var stream = new FileStream(filePath, FileMode.Create))
+                if (ProfilePicture != null && ProfilePicture.Length > 0)
                 {
-                    await ProfilePicture.CopyToAsync(stream);
+                    try
+                    {
+                        var uploadPath = Path.Combine(_environment.WebRootPath, "actor");
+                        if (!Directory.Exists(uploadPath))
+                        {
+                            Directory.CreateDirectory(uploadPath);
+                            Console.WriteLine("Created directory: " + uploadPath);
+                        }
+
+                        var fileName = $"{Path.GetFileNameWithoutExtension(ProfilePicture.FileName)}-{Guid.NewGuid()}{Path.GetExtension(ProfilePicture.FileName)}";
+                        var filePath = Path.Combine(uploadPath, fileName);
+
+                        using (var stream = new FileStream(filePath, FileMode.Create))
+                        {
+                            await ProfilePicture.CopyToAsync(stream);
+                        }
+
+                        actor.ProfilePictureUrl = $"/actor/{fileName}";
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine("Error uploading file: " + ex.Message);
+                        ModelState.AddModelError("ProfilePicture", "Không thể tải lên file ảnh. Vui lòng thử lại.");
+                        return View(actor);
+                    }
                 }
 
-                actor.ProfilePictureUrl = $"/actor/{fileName}";
-            }
-
-            await _actorService.AddActorAsync(actor);
-            return RedirectToAction(nameof(Index));
-        }
+                await _actorService.AddActorAsync(actor);
+                return RedirectToAction(nameof(Index));
+}
 
         // Chỉnh sửa diễn viên (GET)
         [HttpGet]

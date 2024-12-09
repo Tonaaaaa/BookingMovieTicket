@@ -38,7 +38,14 @@ namespace Backend.Controllers
         // Tạo phim mới (POST)
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(Movie movie, List<int> actorIds, IFormFile PosterFile, IFormFile TrailerFile, List<string> Formats, List<string> LanguagesAvailable, string AgeRating)
+        public async Task<IActionResult> Create(
+            Movie movie,
+            List<int> actorIds,
+            IFormFile PosterFile,
+            IFormFile TrailerFile,
+            List<string> Formats,
+            List<string> LanguagesAvailable,
+            string AgeRating)
         {
             if (!ModelState.IsValid)
             {
@@ -46,41 +53,38 @@ namespace Backend.Controllers
                 return View(movie);
             }
 
-            var filmDirectory = Path.Combine(_webHostEnvironment.WebRootPath, "film");
-            if (!Directory.Exists(filmDirectory))
-                Directory.CreateDirectory(filmDirectory);
+            var uploadPath = Path.Combine(_webHostEnvironment.WebRootPath, "uploads");
+            if (!Directory.Exists(uploadPath)) Directory.CreateDirectory(uploadPath);
 
             // Upload Poster
             if (PosterFile != null && PosterFile.Length > 0)
             {
-                var posterPath = Path.Combine(filmDirectory, Path.GetFileName(PosterFile.FileName));
+                var posterPath = Path.Combine(uploadPath, Path.GetFileName(PosterFile.FileName));
                 using (var stream = new FileStream(posterPath, FileMode.Create))
                 {
                     await PosterFile.CopyToAsync(stream);
                 }
-                movie.BannerUrl = $"/film/{Path.GetFileName(PosterFile.FileName)}";
+                movie.BannerUrl = $"/uploads/{Path.GetFileName(PosterFile.FileName)}";
             }
 
             // Upload Trailer
             if (TrailerFile != null && TrailerFile.Length > 0)
             {
-                var trailerPath = Path.Combine(filmDirectory, Path.GetFileName(TrailerFile.FileName));
+                var trailerPath = Path.Combine(uploadPath, Path.GetFileName(TrailerFile.FileName));
                 using (var stream = new FileStream(trailerPath, FileMode.Create))
                 {
                     await TrailerFile.CopyToAsync(stream);
                 }
-                movie.TrailerUrl = $"/film/{Path.GetFileName(TrailerFile.FileName)}";
+                movie.TrailerUrl = $"/uploads/{Path.GetFileName(TrailerFile.FileName)}";
             }
 
-            // Gán định dạng, ngôn ngữ, và phân loại độ tuổi
             movie.Formats = Formats;
             movie.LanguagesAvailable = LanguagesAvailable;
             movie.AgeRating = AgeRating;
 
             await _movieService.AddMovieAsync(movie, actorIds);
-            return Redirect("/AdminMovie" );
+            return RedirectToAction(nameof(Index));
         }
-
 
         // Chỉnh sửa phim (GET)
         public async Task<IActionResult> Edit(int id)
@@ -97,7 +101,15 @@ namespace Backend.Controllers
         // Chỉnh sửa phim (POST)
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, Movie movie, List<int> actorIds, IFormFile PosterFile, IFormFile TrailerFile, List<string> Formats, List<string> LanguagesAvailable, string AgeRating)
+        public async Task<IActionResult> Edit(
+            int id,
+            Movie movie,
+            List<int> actorIds,
+            IFormFile PosterFile,
+            IFormFile TrailerFile,
+            List<string> Formats,
+            List<string> LanguagesAvailable,
+            string AgeRating)
         {
             if (id != movie.Id)
                 return NotFound();
@@ -105,36 +117,35 @@ namespace Backend.Controllers
             if (!ModelState.IsValid)
             {
                 ViewBag.Actors = await _actorService.GetAllActorsAsync();
+                ViewBag.SelectedActorIds = actorIds;
                 return View(movie);
             }
 
-            var filmDirectory = Path.Combine(_webHostEnvironment.WebRootPath, "film");
-            if (!Directory.Exists(filmDirectory))
-                Directory.CreateDirectory(filmDirectory);
+            var uploadPath = Path.Combine(_webHostEnvironment.WebRootPath, "uploads");
+            if (!Directory.Exists(uploadPath)) Directory.CreateDirectory(uploadPath);
 
             // Upload Poster
             if (PosterFile != null && PosterFile.Length > 0)
             {
-                var posterPath = Path.Combine(filmDirectory, Path.GetFileName(PosterFile.FileName));
+                var posterPath = Path.Combine(uploadPath, Path.GetFileName(PosterFile.FileName));
                 using (var stream = new FileStream(posterPath, FileMode.Create))
                 {
                     await PosterFile.CopyToAsync(stream);
                 }
-                movie.BannerUrl = $"/film/{Path.GetFileName(PosterFile.FileName)}";
+                movie.BannerUrl = $"/uploads/{Path.GetFileName(PosterFile.FileName)}";
             }
 
             // Upload Trailer
             if (TrailerFile != null && TrailerFile.Length > 0)
             {
-                var trailerPath = Path.Combine(filmDirectory, Path.GetFileName(TrailerFile.FileName));
+                var trailerPath = Path.Combine(uploadPath, Path.GetFileName(TrailerFile.FileName));
                 using (var stream = new FileStream(trailerPath, FileMode.Create))
                 {
                     await TrailerFile.CopyToAsync(stream);
                 }
-                movie.TrailerUrl = $"/film/{Path.GetFileName(TrailerFile.FileName)}";
+                movie.TrailerUrl = $"/uploads/{Path.GetFileName(TrailerFile.FileName)}";
             }
 
-            // Gán định dạng, ngôn ngữ, và phân loại độ tuổi
             movie.Formats = Formats;
             movie.LanguagesAvailable = LanguagesAvailable;
             movie.AgeRating = AgeRating;

@@ -42,6 +42,7 @@ namespace Backend.Models
 
         public string? City { get; set; } // Thành phố
         public string? ImageUrl { get; set; }
-        public ICollection<Showtime> Showtimes { get; set; }
+        public ICollection<Showtime>? Showtimes { get; set; }
+        public ICollection<Screen> Screens { get; set; } = new List<Screen>();
     }
 }
