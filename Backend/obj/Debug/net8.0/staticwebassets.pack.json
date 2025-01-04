@@ -5,12 +5,84 @@
       "PackagePath": "staticwebassets\\Backend.bundle.scp.css"
     },
     {
+      "Id": "C:\\Users\\tranv\\OneDrive\\Desktop\\BookingMovieTicket\\BookingMovieTicket\\Backend\\wwwroot\\actor\\Arethai-3b8b6c2f-3a3c-4887-9aa8-026bdb87c3c3.jpg",
+      "PackagePath": "staticwebassets\\actor\\Arethai-3b8b6c2f-3a3c-4887-9aa8-026bdb87c3c3.jpg"
+    },
+    {
+      "Id": "C:\\Users\\tranv\\OneDrive\\Desktop\\BookingMovieTicket\\BookingMovieTicket\\Backend\\wwwroot\\actor\\Daou-b8c6f58a-df41-47b1-a875-4ce4a53f5235.jpg",
+      "PackagePath": "staticwebassets\\actor\\Daou-b8c6f58a-df41-47b1-a875-4ce4a53f5235.jpg"
+    },
+    {
+      "Id": "C:\\Users\\tranv\\OneDrive\\Desktop\\BookingMovieTicket\\BookingMovieTicket\\Backend\\wwwroot\\actor\\Hùng Anh-249a2436-da7c-41ed-9ca2-8edada5b06bc.png",
+      "PackagePath": "staticwebassets\\actor\\Hùng Anh-249a2436-da7c-41ed-9ca2-8edada5b06bc.png"
+    },
+    {
+      "Id": "C:\\Users\\tranv\\OneDrive\\Desktop\\BookingMovieTicket\\BookingMovieTicket\\Backend\\wwwroot\\actor\\Hồng Đào-24a815a5-0873-478a-ba90-18f6857017da.png",
+      "PackagePath": "staticwebassets\\actor\\Hồng Đào-24a815a5-0873-478a-ba90-18f6857017da.png"
+    },
+    {
+      "Id": "C:\\Users\\tranv\\OneDrive\\Desktop\\BookingMovieTicket\\BookingMovieTicket\\Backend\\wwwroot\\actor\\Lê Khánh-091fc6d3-b2b4-4dd3-aa7f-3cc0afc14b0c.png",
+      "PackagePath": "staticwebassets\\actor\\Lê Khánh-091fc6d3-b2b4-4dd3-aa7f-3cc0afc14b0c.png"
+    },
+    {
+      "Id": "C:\\Users\\tranv\\OneDrive\\Desktop\\BookingMovieTicket\\BookingMovieTicket\\Backend\\wwwroot\\actor\\Ngọc Trinh-f779126c-117c-458f-be4b-9aceb16932e6.png",
+      "PackagePath": "staticwebassets\\actor\\Ngọc Trinh-f779126c-117c-458f-be4b-9aceb16932e6.png"
+    },
+    {
+      "Id": "C:\\Users\\tranv\\OneDrive\\Desktop\\BookingMovieTicket\\BookingMovieTicket\\Backend\\wwwroot\\actor\\Nhật Linh-fee5c487-e7a7-4a3d-8e62-dfeb7b115b3c.png",
+      "PackagePath": "staticwebassets\\actor\\Nhật Linh-fee5c487-e7a7-4a3d-8e62-dfeb7b115b3c.png"
+    },
+    {
+      "Id": "C:\\Users\\tranv\\OneDrive\\Desktop\\BookingMovieTicket\\BookingMovieTicket\\Backend\\wwwroot\\actor\\Nui-bf1eb4d4-24c3-43c9-a1f1-5da6e2d0c48e.jpg",
+      "PackagePath": "staticwebassets\\actor\\Nui-bf1eb4d4-24c3-43c9-a1f1-5da6e2d0c48e.jpg"
+    },
+    {
+      "Id": "C:\\Users\\tranv\\OneDrive\\Desktop\\BookingMovieTicket\\BookingMovieTicket\\Backend\\wwwroot\\actor\\Phương Duyên-3e055c55-e118-4d88-a200-75cb573178d2.png",
+      "PackagePath": "staticwebassets\\actor\\Phương Duyên-3e055c55-e118-4d88-a200-75cb573178d2.png"
+    },
+    {
+      "Id": "C:\\Users\\tranv\\OneDrive\\Desktop\\BookingMovieTicket\\BookingMovieTicket\\Backend\\wwwroot\\actor\\Ter Chantavit-4a5eaa3f-55ba-48fc-9882-01d26b0c8b65.jpg",
+      "PackagePath": "staticwebassets\\actor\\Ter Chantavit-4a5eaa3f-55ba-48fc-9882-01d26b0c8b65.jpg"
+    },
+    {
+      "Id": "C:\\Users\\tranv\\OneDrive\\Desktop\\BookingMovieTicket\\BookingMovieTicket\\Backend\\wwwroot\\actor\\Thanaerng-eb12907e-353f-49b2-af94-07330694d1db.jpg",
+      "PackagePath": "staticwebassets\\actor\\Thanaerng-eb12907e-353f-49b2-af94-07330694d1db.jpg"
+    },
+    {
       "Id": "C:\\Users\\tranv\\OneDrive\\Desktop\\BookingMovieTicket\\BookingMovieTicket\\Backend\\wwwroot\\actor\\Tona1-cf5e2c07-1d9f-4f00-9740-468d2b6d526c.jpg",
       "PackagePath": "staticwebassets\\actor\\Tona1-cf5e2c07-1d9f-4f00-9740-468d2b6d526c.jpg"
     },
     {
+      "Id": "C:\\Users\\tranv\\OneDrive\\Desktop\\BookingMovieTicket\\BookingMovieTicket\\Backend\\wwwroot\\actor\\Việt Hương-fa0956c6-9afa-47ec-98bd-a42c6c948b41.png",
+      "PackagePath": "staticwebassets\\actor\\Việt Hương-fa0956c6-9afa-47ec-98bd-a42c6c948b41.png"
+    },
+    {
+      "Id": "C:\\Users\\tranv\\OneDrive\\Desktop\\BookingMovieTicket\\BookingMovieTicket\\Backend\\wwwroot\\actor\\hutech-c9141a5b-dfd0-48e3-a639-2fbabb0d8617.jpg",
+      "PackagePath": "staticwebassets\\actor\\hutech-c9141a5b-dfd0-48e3-a639-2fbabb0d8617.jpg"
+    },
+    {
       "Id": "C:\\Users\\tranv\\OneDrive\\Desktop\\BookingMovieTicket\\BookingMovieTicket\\Backend\\wwwroot\\actor\\set-vt2-9ecc7971-41d1-43a2-8976-f44b920bbaed.jpg",
       "PackagePath": "staticwebassets\\actor\\set-vt2-9ecc7971-41d1-43a2-8976-f44b920bbaed.jpg"
+    },
+    {
+      "Id": "C:\\Users\\tranv\\OneDrive\\Desktop\\BookingMovieTicket\\BookingMovieTicket\\Backend\\wwwroot\\actor\\Đinh Y Nhung-9b378488-711c-4e01-84b4-992fcca8962b.png",
+      "PackagePath": "staticwebassets\\actor\\Đinh Y Nhung-9b378488-711c-4e01-84b4-992fcca8962b.png"
+    },
+    {
+      "Id": "C:\\Users\\tranv\\OneDrive\\Desktop\\BookingMovieTicket\\BookingMovieTicket\\Backend\\wwwroot\\actor\\박신양-7499cee6-3a65-42cb-8d1e-6ff24b3d248d.jpg",
+      "PackagePath": "staticwebassets\\actor\\박신양-7499cee6-3a65-42cb-8d1e-6ff24b3d248d.jpg"
+    },
+    {
+      "Id": "C:\\Users\\tranv\\OneDrive\\Desktop\\BookingMovieTicket\\BookingMovieTicket\\Backend\\wwwroot\\actor\\이레-29ac89de-baf0-4fc8-8334-12d14e576918.jpg",
+      "PackagePath": "staticwebassets\\actor\\이레-29ac89de-baf0-4fc8-8334-12d14e576918.jpg"
+    },
+    {
+      "Id": "C:\\Users\\tranv\\OneDrive\\Desktop\\BookingMovieTicket\\BookingMovieTicket\\Backend\\wwwroot\\actor\\이민기-05783e09-e474-46dc-ab3c-0d81c5ed0f5f.jpg",
+      "PackagePath": "staticwebassets\\actor\\이민기-05783e09-e474-46dc-ab3c-0d81c5ed0f5f.jpg"
+    },
+    {
+      "Id": "C:\\Users\\tranv\\OneDrive\\Desktop\\BookingMovieTicket\\BookingMovieTicket\\Backend\\wwwroot\\actor\\태인호-9205b88e-b6a2-49b9-a564-22bd07e82777.jpg",
+      "PackagePath": "staticwebassets\\actor\\태인호-9205b88e-b6a2-49b9-a564-22bd07e82777.jpg"
     },
     {
       "Id": "C:\\Users\\tranv\\OneDrive\\Desktop\\BookingMovieTicket\\BookingMovieTicket\\Backend\\wwwroot\\css\\bootstrap.min.css",
@@ -1649,12 +1721,32 @@
       "PackagePath": "staticwebassets\\js\\setting-demo2.js"
     },
     {
+      "Id": "C:\\Users\\tranv\\OneDrive\\Desktop\\BookingMovieTicket\\BookingMovieTicket\\Backend\\wwwroot\\theatre\\CGV-2e299591-2abe-41c5-b765-97936c05cb22.png",
+      "PackagePath": "staticwebassets\\theatre\\CGV-2e299591-2abe-41c5-b765-97936c05cb22.png"
+    },
+    {
       "Id": "C:\\Users\\tranv\\OneDrive\\Desktop\\BookingMovieTicket\\BookingMovieTicket\\Backend\\wwwroot\\theatre\\CGV-64319e48-33aa-4f67-ba54-7387b7ac149c.png",
       "PackagePath": "staticwebassets\\theatre\\CGV-64319e48-33aa-4f67-ba54-7387b7ac149c.png"
     },
     {
       "Id": "C:\\Users\\tranv\\OneDrive\\Desktop\\BookingMovieTicket\\BookingMovieTicket\\Backend\\wwwroot\\theatre\\CGV-8c85a582-d7b0-4866-9448-1e4e350ce98e.png",
       "PackagePath": "staticwebassets\\theatre\\CGV-8c85a582-d7b0-4866-9448-1e4e350ce98e.png"
+    },
+    {
+      "Id": "C:\\Users\\tranv\\OneDrive\\Desktop\\BookingMovieTicket\\BookingMovieTicket\\Backend\\wwwroot\\theatre\\CGV-8ceb62f3-48c6-46eb-9257-e08e57813612.png",
+      "PackagePath": "staticwebassets\\theatre\\CGV-8ceb62f3-48c6-46eb-9257-e08e57813612.png"
+    },
+    {
+      "Id": "C:\\Users\\tranv\\OneDrive\\Desktop\\BookingMovieTicket\\BookingMovieTicket\\Backend\\wwwroot\\theatre\\CGV-af1323fd-b7a6-49cb-ad4d-2cd04e1ddd4d.png",
+      "PackagePath": "staticwebassets\\theatre\\CGV-af1323fd-b7a6-49cb-ad4d-2cd04e1ddd4d.png"
+    },
+    {
+      "Id": "C:\\Users\\tranv\\OneDrive\\Desktop\\BookingMovieTicket\\BookingMovieTicket\\Backend\\wwwroot\\theatre\\CGV-b04d6de1-880c-48a9-9905-575e63ce9745.png",
+      "PackagePath": "staticwebassets\\theatre\\CGV-b04d6de1-880c-48a9-9905-575e63ce9745.png"
+    },
+    {
+      "Id": "C:\\Users\\tranv\\OneDrive\\Desktop\\BookingMovieTicket\\BookingMovieTicket\\Backend\\wwwroot\\theatre\\CGV-e59470b4-9cd8-450b-a3bf-802119bf8129.png",
+      "PackagePath": "staticwebassets\\theatre\\CGV-e59470b4-9cd8-450b-a3bf-802119bf8129.png"
     },
     {
       "Id": "C:\\Users\\tranv\\OneDrive\\Desktop\\BookingMovieTicket\\BookingMovieTicket\\Backend\\wwwroot\\theatre\\CGV-eb075404-2baf-41ab-9f2b-f8e67df5abdd.png",
@@ -1665,8 +1757,32 @@
       "PackagePath": "staticwebassets\\theatre\\CGV.png"
     },
     {
+      "Id": "C:\\Users\\tranv\\OneDrive\\Desktop\\BookingMovieTicket\\BookingMovieTicket\\Backend\\wwwroot\\uploads\\404 Chạy Ngay Đi.jpg",
+      "PackagePath": "staticwebassets\\uploads\\404 Chạy Ngay Đi.jpg"
+    },
+    {
+      "Id": "C:\\Users\\tranv\\OneDrive\\Desktop\\BookingMovieTicket\\BookingMovieTicket\\Backend\\wwwroot\\uploads\\917357f489e95a095c5657532b484aa2.jpg",
+      "PackagePath": "staticwebassets\\uploads\\917357f489e95a095c5657532b484aa2.jpg"
+    },
+    {
       "Id": "C:\\Users\\tranv\\OneDrive\\Desktop\\BookingMovieTicket\\BookingMovieTicket\\Backend\\wwwroot\\uploads\\Doraemon.jpg",
       "PackagePath": "staticwebassets\\uploads\\Doraemon.jpg"
+    },
+    {
+      "Id": "C:\\Users\\tranv\\OneDrive\\Desktop\\BookingMovieTicket\\BookingMovieTicket\\Backend\\wwwroot\\uploads\\Kính vạn hoa.jpg",
+      "PackagePath": "staticwebassets\\uploads\\Kính vạn hoa.jpg"
+    },
+    {
+      "Id": "C:\\Users\\tranv\\OneDrive\\Desktop\\BookingMovieTicket\\BookingMovieTicket\\Backend\\wwwroot\\uploads\\Ngài Quỷ.jpg",
+      "PackagePath": "staticwebassets\\uploads\\Ngài Quỷ.jpg"
+    },
+    {
+      "Id": "C:\\Users\\tranv\\OneDrive\\Desktop\\BookingMovieTicket\\BookingMovieTicket\\Backend\\wwwroot\\uploads\\gia-bap-nuoc-cgv-1.jpg",
+      "PackagePath": "staticwebassets\\uploads\\gia-bap-nuoc-cgv-1.jpg"
+    },
+    {
+      "Id": "C:\\Users\\tranv\\OneDrive\\Desktop\\BookingMovieTicket\\BookingMovieTicket\\Backend\\wwwroot\\uploads\\poster_Chi_Dau.jpg",
+      "PackagePath": "staticwebassets\\uploads\\poster_Chi_Dau.jpg"
     },
     {
       "Id": "C:\\Users\\tranv\\OneDrive\\Desktop\\BookingMovieTicket\\BookingMovieTicket\\Backend\\wwwroot\\uploads\\test2.mp4",
@@ -1675,6 +1791,10 @@
     {
       "Id": "C:\\Users\\tranv\\OneDrive\\Desktop\\BookingMovieTicket\\BookingMovieTicket\\Backend\\wwwroot\\uploads\\tải xuống.jpg",
       "PackagePath": "staticwebassets\\uploads\\tải xuống.jpg"
+    },
+    {
+      "Id": "C:\\Users\\tranv\\OneDrive\\Desktop\\BookingMovieTicket\\BookingMovieTicket\\Backend\\wwwroot\\uploads\\z6097195813298_d48cdc1a86390efa3d6606aaf8403f38.jpg",
+      "PackagePath": "staticwebassets\\uploads\\z6097195813298_d48cdc1a86390efa3d6606aaf8403f38.jpg"
     },
     {
       "Id": "obj\\Debug\\net8.0\\staticwebassets\\msbuild.Backend.Microsoft.AspNetCore.StaticWebAssets.props",

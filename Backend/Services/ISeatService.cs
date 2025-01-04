@@ -7,7 +7,8 @@ namespace Backend.Services
     public interface ISeatService
     {
         Task<List<Seat>> GetAllSeatsAsync();
-        Task<Seat?> GetSeatByScreenIdAsync(int screenId); // Đổi thành GetSeatByScreenIdAsync
+        Task<List<Seat>> GetSeatsByScreenIdAsync(int screenId);
+        // Task<List<Seat>> GetSeatsByScreenAndShowtimeAsync(int screenId, int showtimeId); // Thêm phương thức
         Task<Seat?> GetSeatByIdAsync(int id);
         Task AddSeatAsync(Seat seat);
         Task UpdateSeatAsync(Seat seat);

@@ -1,3 +1,4 @@
+import 'package:bookingmovieticket/models/user_model.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../controllers/theatre_controller.dart';
@@ -7,8 +8,10 @@ import 'select_showtime_screen.dart'; // Import màn hình SelectShowtimeScreen
 
 class ListCinemaScreen extends StatelessWidget {
   final Movie model;
+  final UserModel user; // Thêm đối tượng user
 
-  const ListCinemaScreen({Key? key, required this.model}) : super(key: key);
+  const ListCinemaScreen({Key? key, required this.model, required this.user})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -73,7 +76,8 @@ class ListCinemaScreen extends StatelessWidget {
                         MaterialPageRoute(
                           builder: (context) => ShowtimeSelectorScreen(
                             theatreName: theatre.name,
-                            theatreId: theatre.id, // Truyền ID rạp
+                            theatreId: theatre.id,
+                            user: user, // Truyền ID rạp
                           ),
                         ),
                       );

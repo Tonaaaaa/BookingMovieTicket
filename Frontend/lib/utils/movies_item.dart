@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../controllers/movie_controller.dart';
 import '../models/movie_model.dart';
+import '../models/user_model.dart'; // Import model UserModel
 
 class MyMovieItem extends StatelessWidget {
   final MovieController movieController = Get.put(MovieController());
@@ -11,6 +12,8 @@ class MyMovieItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final Size size = MediaQuery.of(context).size;
+    final UserModel user =
+        Get.find<UserModel>(); // Lấy thông tin người dùng từ GetX
 
     return Obx(() {
       if (movieController.isLoading.value) {
@@ -44,10 +47,9 @@ class MyMovieItem extends StatelessWidget {
               height: 150,
               width: 120,
               onTap: (selectedMovie) {
-                Get.to(
-                  () => DetailsScreen(),
-                  arguments: selectedMovie,
-                );
+                // Truyền thông tin người dùng vào DetailsScreen
+                Get.to(() => DetailsScreen(user: user),
+                    arguments: selectedMovie);
               },
             );
           },

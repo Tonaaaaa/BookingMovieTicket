@@ -4,8 +4,10 @@ using Backend.Services;
 using Microsoft.EntityFrameworkCore;
 using Backend.Extention;
 using System.Text.Json.Serialization;
+using Backend.Models;
 
 var builder = WebApplication.CreateBuilder(args);
+builder.Services.AddSingleton<FirestoreService>();
 
 // Cấu hình CORS để chấp nhận tất cả yêu cầu từ mọi nguồn gốc (nếu đang phát triển)
 builder.Services.AddCors(options =>
@@ -24,7 +26,7 @@ builder.Services.AddHttpClient();
 // Cấu hình DbContext và chuỗi kết nối
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseMySql(
-        Utils.DB_MYSQL, 
+        Utils.DB_MYSQL,
         ServerVersion.AutoDetect(Utils.DB_MYSQL)));
 
 // Đăng ký các dịch vụ và repository (Dependency Injection)
@@ -34,6 +36,16 @@ builder.Services.AddScoped<IShowtimeService, ShowtimeRepository>();
 builder.Services.AddScoped<IActorService, ActorRepository>();
 builder.Services.AddScoped<IScreenService, ScreenRepository>();
 builder.Services.AddScoped<ISeatService, SeatRepository>();
+builder.Services.AddScoped<ISnackPackageService, SnackPackageRepository>();
+builder.Services.AddScoped<IBookingService, BookingRepository>();
+builder.Services.AddTransient<IMomoService, MomoRepository>();
+builder.Services.AddScoped<IRevenueService, RevenueRepository>();
+
+
+
+
+
+
 
 // Thêm cấu hình JSON để xử lý chu kỳ tham chiếu và định dạng dữ liệu
 builder.Services.AddControllersWithViews()

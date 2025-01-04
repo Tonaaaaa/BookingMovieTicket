@@ -8,7 +8,7 @@ class Movie {
   final DateTime releaseDate;
   final int durationInMinutes;
   final List<String> genres;
-  final int like;
+  final int likes; // Renamed for clarity
   final String status;
   final String? trailerUrl;
   final List<Actor> actors;
@@ -24,7 +24,7 @@ class Movie {
     required this.releaseDate,
     required this.durationInMinutes,
     required this.genres,
-    required this.like,
+    required this.likes, // Updated naming for consistency
     required this.status,
     this.trailerUrl,
     required this.actors,
@@ -34,23 +34,18 @@ class Movie {
   });
 
   factory Movie.fromJson(Map<String, dynamic> json) {
-    String? bannerUrl =
-        json['BannerUrl']?.replaceFirst('localhost', '10.0.2.2');
-    String? trailerUrl =
-        json['TrailerUrl']?.replaceFirst('localhost', '10.0.2.2');
-
     return Movie(
-      id: json['Id'],
-      title: json['Title'] ?? 'Unknown',
+      id: (json['Id'] as int?) ?? 0, // Xử lý null
+      title: json['Title'] ?? 'Unknown', // Giá trị mặc định
       description: json['Description'],
-      bannerUrl: bannerUrl != null ? Uri.encodeFull(bannerUrl) : null,
+      bannerUrl: _resolveUrl(json['BannerUrl']),
       releaseDate:
           DateTime.tryParse(json['ReleaseDate'] ?? '') ?? DateTime.now(),
-      durationInMinutes: json['DurationInMinutes'] ?? 0,
+      durationInMinutes: (json['DurationInMinutes'] as int?) ?? 0, // Xử lý null
       genres: List<String>.from(json['Genres'] ?? []),
-      like: json['Like'] ?? 0,
+      likes: (json['Like'] as int?) ?? 0, // Xử lý null
       status: json['Status'] ?? 'Inactive',
-      trailerUrl: trailerUrl != null ? Uri.encodeFull(trailerUrl) : null,
+      trailerUrl: _resolveUrl(json['TrailerUrl']),
       actors: (json['Actors'] as List?)
               ?.map((actorJson) => Actor.fromJson(actorJson))
               .toList() ??
@@ -70,7 +65,7 @@ class Movie {
       'ReleaseDate': releaseDate.toIso8601String(),
       'DurationInMinutes': durationInMinutes,
       'Genres': genres,
-      'Like': like,
+      'Like': likes,
       'Status': status,
       'TrailerUrl': trailerUrl,
       'Actors': actors.map((actor) => actor.toJson()).toList(),
@@ -78,5 +73,11 @@ class Movie {
       'Formats': formats,
       'LanguagesAvailable': languagesAvailable,
     };
+  }
+
+  // Helper function to resolve URL and replace localhost with the emulator IP
+  static String? _resolveUrl(String? url) {
+    if (url == null) return null;
+    return Uri.encodeFull(url.replaceFirst('localhost', '10.0.2.2'));
   }
 }

@@ -20,19 +20,30 @@ class _SplashScreenState extends State<SplashScreen>
 
   @override
   void initState() {
+    super.initState();
+
     _animationController = AnimationController(
-        vsync: this, duration: const Duration(milliseconds: 1000));
+      vsync: this,
+      duration: const Duration(milliseconds: 1000),
+    );
+
     _animation = CurvedAnimation(
-        parent: _animationController,
-        curve: Curves.bounceOut,
-        reverseCurve: Curves.bounceIn);
+      parent: _animationController,
+      curve: Curves.bounceOut,
+      reverseCurve: Curves.bounceIn,
+    );
+
     _animationController.forward();
 
-    Timer(
-        const Duration(milliseconds: 2500),
-        () => Navigator.pushReplacement(
-            context, MaterialPageRoute(builder: (context) => LoginScreen())));
-    super.initState();
+    // Sử dụng Timer với kiểm tra `mounted`
+    Timer(const Duration(milliseconds: 2500), () {
+      if (mounted) {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => LoginScreen()),
+        );
+      }
+    });
   }
 
   @override
@@ -44,17 +55,17 @@ class _SplashScreenState extends State<SplashScreen>
   @override
   Widget build(BuildContext context) {
     SystemChrome.setSystemUIOverlayStyle(
-        const SystemUiOverlayStyle(statusBarColor: Colors.transparent));
+      const SystemUiOverlayStyle(statusBarColor: Colors.transparent),
+    );
+
     return Scaffold(
       backgroundColor: MyTheme.splash,
-      body: Container(
-        child: Center(
-          child: ScaleTransition(
-            scale: _animation,
-            child: SvgPicture.asset(
-              "assets/icons/splash_icon.svg",
-              height: 70,
-            ),
+      body: Center(
+        child: ScaleTransition(
+          scale: _animation,
+          child: SvgPicture.asset(
+            "assets/icons/splash_icon.svg",
+            height: 70,
           ),
         ),
       ),

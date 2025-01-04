@@ -38,7 +38,9 @@ class UserModel {
       email: map['email'] ?? '',
       phone: map['phone'] ?? '',
       role: map['role'] ?? '',
-      createdAt: DateTime.parse(map['createdAt']),
+      createdAt: map['createdAt'] != null
+          ? DateTime.tryParse(map['createdAt']) ?? DateTime.now()
+          : DateTime.now(),
       avatarUrl: map['avatarUrl'] ?? '',
     );
   }

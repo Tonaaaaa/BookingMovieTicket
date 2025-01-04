@@ -1,14 +1,13 @@
 import 'dart:io';
 import 'package:bookingmovieticket/controllers/auth_controller.dart';
 import 'package:bookingmovieticket/controllers/profile_controller.dart';
+import 'package:bookingmovieticket/pages/booking_history_page.dart';
 import 'package:bookingmovieticket/utils/mytheme.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:path/path.dart' as path;
 import 'package:path_provider/path_provider.dart';
-import 'package:firebase_storage/firebase_storage.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({Key? key}) : super(key: key);
@@ -24,10 +23,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   final picker = ImagePicker();
 
-  // Thêm biến theo dõi trạng thái thay đổi của thông tin
   String initialUsername = '';
   String initialPhone = '';
-
   bool isInfoChanged = false;
 
   @override
@@ -35,7 +32,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     super.initState();
     Get.put(ProfileController());
 
-    // Tải dữ liệu người dùng từ Firestore khi khởi tạo
+    // Load user data from Firestore
     ProfileController.instance
         .loadUserData(AuthController.instance.user!.uid)
         .then((_) {
@@ -47,12 +44,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
       });
     });
 
-    // Lắng nghe sự thay đổi trên các TextEditingController
     usernameController.addListener(_checkInfoChanged);
     phoneController.addListener(_checkInfoChanged);
   }
 
-  // Hàm kiểm tra xem thông tin có thay đổi hay không
   void _checkInfoChanged() {
     setState(() {
       isInfoChanged = (usernameController.text != initialUsername ||
@@ -60,18 +55,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
     });
   }
 
-  // Hàm chọn ảnh từ thư viện hoặc máy ảnh
   Future<void> _pickImage() async {
     final pickedFile = await picker.pickImage(source: ImageSource.gallery);
 
     if (pickedFile != null) {
       setState(() {
-        _imageFile = File(pickedFile.path); // Cập nhật ảnh đã chọn
+        _imageFile = File(pickedFile.path);
       });
     }
   }
 
-  // Lưu ảnh vào bộ nhớ cục bộ
   Future<void> _saveImageToLocal() async {
     if (_imageFile == null) {
       return;
@@ -81,10 +74,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
       String fileName = path.basename(_imageFile!.path);
       File localFile = File('${directory.path}/$fileName');
 
-      // Lưu ảnh vào bộ nhớ cục bộ
       await _imageFile!.copy(localFile.path);
 
-      // Cập nhật đường dẫn ảnh vào Firestore
       ProfileController.instance.updateAvatarUrl(localFile.path);
     } catch (e) {
       Get.snackbar("Error", "Failed to save image: $e",
@@ -152,7 +143,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
             const SizedBox(height: 15),
 
-            // Email (Chỉ hiển thị)
+            // Email
             const Text("Email",
                 style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
             TextFormField(
@@ -192,7 +183,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
             const SizedBox(height: 30),
 
-            // Nút Save Changes
+            // Save Changes Button
             ElevatedButton.icon(
               onPressed: isInfoChanged
                   ? () {
@@ -207,12 +198,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       }
                       _saveImageToLocal();
 
-                      // Hiển thị thông báo khi lưu thành công
                       Get.snackbar("Success", "Lưu thông tin thành công",
                           backgroundColor: Colors.green,
                           colorText: Colors.white);
                     }
-                  : null, // Disable if no changes
+                  : null,
               icon: Icon(Icons.save, color: Colors.white),
               label: Text('Lưu', style: TextStyle(fontWeight: FontWeight.bold)),
               style: ElevatedButton.styleFrom(
@@ -227,7 +217,29 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
             const SizedBox(height: 20),
 
-            // Nút Log Out
+            // Booking History Button
+            ElevatedButton.icon(
+              onPressed: () {
+                Get.to(() => BookingHistoryPage(
+                      userId: AuthController.instance.user!.uid,
+                    ));
+              },
+              icon: Icon(Icons.history, color: Colors.white),
+              label: Text('Lịch sử đặt vé',
+                  style: TextStyle(fontWeight: FontWeight.bold)),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.orangeAccent,
+                foregroundColor: Colors.white,
+                padding: EdgeInsets.symmetric(vertical: 14, horizontal: 25),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8),
+                ),
+              ),
+            ),
+
+            const SizedBox(height: 20),
+
+            // Logout Button
             ElevatedButton.icon(
               onPressed: () async {
                 Get.dialog(

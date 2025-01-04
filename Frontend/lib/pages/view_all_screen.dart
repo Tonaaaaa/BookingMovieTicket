@@ -6,6 +6,7 @@ import 'package:bookingmovieticket/controllers/common_controller.dart';
 import 'package:bookingmovieticket/controllers/location_controller.dart';
 import 'package:bookingmovieticket/controllers/movie_controller.dart';
 import 'package:bookingmovieticket/widgets/item_block.dart';
+import '../models/user_model.dart'; // Import model UserModel
 
 class ViewAllScreen extends StatelessWidget {
   const ViewAllScreen({Key? key}) : super(key: key);
@@ -13,6 +14,8 @@ class ViewAllScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final MovieController movieController = Get.find<MovieController>();
+    final UserModel user =
+        Get.find<UserModel>(); // Get thông tin người dùng từ GetX
 
     return WillPopScope(
       onWillPop: () {
@@ -66,7 +69,9 @@ class ViewAllScreen extends StatelessWidget {
                 height: 180,
                 width: 150,
                 onTap: (model) {
-                  Get.to(() => DetailsScreen(), arguments: [model, index]);
+                  // Truyền thông tin người dùng vào DetailsScreen
+                  Get.to(() => DetailsScreen(user: user),
+                      arguments: [model, index]);
                 },
               );
             },

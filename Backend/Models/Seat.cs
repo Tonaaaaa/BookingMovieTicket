@@ -14,7 +14,10 @@ namespace Backend.Models
 
         [Required]
         public string? Arrangement { get; set; }
+
+
+
     }
 
-    
+
 }

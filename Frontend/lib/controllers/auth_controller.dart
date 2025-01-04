@@ -9,7 +9,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:flutter/services.dart';
 
 class AuthController extends GetxController {
   static AuthController instance = Get.find();
@@ -20,6 +19,19 @@ class AuthController extends GetxController {
   final FirebaseAuth auth = FirebaseAuth.instance;
   final FirebaseFirestore firestore = FirebaseFirestore.instance;
 
+  /// **Bổ sung thêm Getter `currentUser`:**
+  /// Lấy thông tin `UserModel` từ Firestore của người dùng hiện tại
+  Future<UserModel?> get currentUser async {
+    if (user != null) {
+      DocumentSnapshot userDoc =
+          await firestore.collection('users').doc(user!.uid).get();
+      if (userDoc.exists) {
+        return UserModel.fromMap(userDoc.data() as Map<String, dynamic>);
+      }
+    }
+    return null;
+  }
+
   @override
   void onReady() {
     super.onReady();
@@ -28,18 +40,20 @@ class AuthController extends GetxController {
     ever(_user, loginRedirect);
   }
 
-  void loginRedirect(User? user) {
-    Timer(Duration(seconds: isLoging ? 0 : 2), () {
-      if (user == null) {
-        isLoging = false;
-        update();
-        Get.offAll(() => const LoginScreen());
-      } else {
-        isLoging = true;
-        update();
-        Get.offAll(() => HomeScreen());
+  void loginRedirect(User? user) async {
+    if (user == null) {
+      Get.offAll(() => const LoginScreen());
+    } else {
+      // Lấy thông tin người dùng từ Firestore
+      DocumentSnapshot userDoc =
+          await firestore.collection('users').doc(user.uid).get();
+      if (userDoc.exists) {
+        UserModel currentUserModel =
+            UserModel.fromMap(userDoc.data() as Map<String, dynamic>);
+        Get.put<UserModel>(currentUserModel); // Đăng ký UserModel vào GetX
       }
-    });
+      Get.offAll(() => HomeScreen());
+    }
   }
 
   // Đăng ký người dùng mới
@@ -182,8 +196,6 @@ class AuthController extends GetxController {
       }
     } on FirebaseAuthException catch (e) {
       getErrorSnackBar("Google login failed", e);
-    } catch (e) {
-      getErrorSnackBarNew("Google login failed: ${e.toString()}");
     }
   }
 

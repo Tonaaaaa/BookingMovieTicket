@@ -30,11 +30,13 @@
         <div class="row g-3 mt-3">
             <div class="col-md-6">
                 <label for="rows" class="form-label">Số Hàng Ghế</label>
-                <input type="number" id="rows" name="rows" class="form-control" min="1" required placeholder="Nhập số hàng ghế" />
+                <input type="number" id="rows" name="rows" class="form-control" min="1" required
+                    placeholder="Nhập số hàng ghế" />
             </div>
             <div class="col-md-6">
                 <label for="columns" class="form-label">Số Cột Ghế</label>
-                <input type="number" id="columns" name="columns" class="form-control" min="1" required placeholder="Nhập số cột ghế" />
+                <input type="number" id="columns" name="columns" class="form-control" min="1" required
+                    placeholder="Nhập số cột ghế" />
             </div>
         </div>
 
@@ -42,15 +44,18 @@
         <div class="row g-3 mt-3">
             <div class="col-md-4">
                 <label for="regularPrice" class="form-label">Giá Ghế Thường</label>
-                <input type="number" id="regularPrice" name="regularPrice" class="form-control" min="0" step="0.01" required placeholder="Nhập giá ghế thường" />
+                <input type="number" id="regularPrice" name="regularPrice" class="form-control" min="0" step="0.01"
+                    required placeholder="Nhập giá ghế thường" />
             </div>
             <div class="col-md-4">
                 <label for="vipPrice" class="form-label">Giá Ghế VIP</label>
-                <input type="number" id="vipPrice" name="vipPrice" class="form-control" min="0" step="0.01" required placeholder="Nhập giá ghế VIP" />
+                <input type="number" id="vipPrice" name="vipPrice" class="form-control" min="0" step="0.01" required
+                    placeholder="Nhập giá ghế VIP" />
             </div>
             <div class="col-md-4">
                 <label for="couplePrice" class="form-label">Giá Ghế Đôi</label>
-                <input type="number" id="couplePrice" name="couplePrice" class="form-control" min="0" step="0.01" required placeholder="Nhập giá ghế đôi" />
+                <input type="number" id="couplePrice" name="couplePrice" class="form-control" min="0" step="0.01"
+                    required placeholder="Nhập giá ghế đôi" />
             </div>
         </div>
 
@@ -58,7 +63,8 @@
         <div class="mt-3">
             <label class="form-label">Loại Ghế:</label>
             <div class="btn-group w-100" role="group">
-                <button type="button" class="btn btn-success" onclick="setCurrentSeatType('Regular')">Ghế Thường</button>
+                <button type="button" class="btn btn-success" onclick="setCurrentSeatType('Regular')">Ghế
+                    Thường</button>
                 <button type="button" class="btn btn-warning" onclick="setCurrentSeatType('VIP')">Ghế VIP</button>
                 <button type="button" class="btn btn-danger" onclick="setCurrentSeatType('Couple')">Ghế Đôi</button>
             </div>
@@ -108,6 +114,7 @@
                 .catch(err => alert("Lỗi khi tải danh sách phòng chiếu."));
         }
 
+
         function generateSeats() {
             const rows = parseInt(document.getElementById('rows').value);
             const columns = parseInt(document.getElementById('columns').value);
@@ -139,12 +146,12 @@
                     rowDiv.appendChild(seatDiv);
                     row.push({ seatNumber: seatDiv.textContent, type: 'Regular', linkedSeatNumber: null, additionalPrice: regularPrice });
                 }
-
                 seatPreview.appendChild(rowDiv);
                 seatArrangement.push(row);
             }
 
             document.getElementById('arrangement').value = JSON.stringify(seatArrangement);
+            console.log("Initial Arrangement:", seatArrangement)
         }
 
         function setSeatType(seatDiv, rowIdx, colIdx, regularPrice, vipPrice, couplePrice) {
@@ -160,9 +167,11 @@
                         currentRow[colIdx].linkedSeatNumber = nextSeat.seatNumber;
                         currentRow[colIdx].additionalPrice = price;
 
+
                         nextSeat.type = 'Couple';
                         nextSeat.linkedSeatNumber = currentRow[colIdx].seatNumber;
                         nextSeat.additionalPrice = price;
+
 
                         const coupleContainer = document.createElement('div');
                         coupleContainer.className = 'couple-seat-container';
@@ -189,6 +198,7 @@
             }
 
             document.getElementById('arrangement').value = JSON.stringify(seatArrangement);
+            console.log("Arrangement after set:", seatArrangement);
         }
 
         function resetSeatType(seatDiv, rowIdx, colIdx) {
@@ -221,6 +231,7 @@
             seatDiv.className = 'seat regular';
 
             document.getElementById('arrangement').value = JSON.stringify(seatArrangement);
+            console.log("Arrangement after reset:", seatArrangement)
         }
     </script>
 }
@@ -276,6 +287,7 @@
             border: none;
             color: white;
         }
+
 
         .screen-line {
             width: 80%;

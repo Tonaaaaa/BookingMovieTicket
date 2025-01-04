@@ -59,5 +59,12 @@ namespace Backend.Repositories
                 await _context.SaveChangesAsync();
             }
         }
+
+        public async Task<List<Showtime>> GetShowtimesByScreenIdAsync(int screenId)
+        {
+            return await _context.Showtimes
+                .Where(showtime => showtime.ScreenId == screenId)
+                .ToListAsync();
+        }
     }
 }

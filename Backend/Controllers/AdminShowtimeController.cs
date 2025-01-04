@@ -13,19 +13,23 @@ namespace Backend.Controllers
         private readonly IMovieService _movieService;
         private readonly ITheatreService _theatreService;
         private readonly IScreenService _screenService;
+        private readonly IBookingService _bookingService;
 
         public AdminShowtimeController(
             IShowtimeService showtimeService,
             IMovieService movieService,
             ITheatreService theatreService,
-            IScreenService screenService)
+            IScreenService screenService,
+            IBookingService bookingService)
         {
             _showtimeService = showtimeService;
             _movieService = movieService;
             _theatreService = theatreService;
             _screenService = screenService;
+            _bookingService = bookingService;
         }
 
+        // GET: /AdminShowtime
         [HttpGet]
         public async Task<IActionResult> Index()
         {
@@ -33,39 +37,28 @@ namespace Backend.Controllers
             return View(showtimes);
         }
 
+        // GET: /AdminShowtime/Create
         [HttpGet]
         public async Task<IActionResult> Create()
         {
-            ViewBag.Movies = await _movieService.GetAllMoviesAsync();
-            ViewBag.Theatres = await _theatreService.GetAllTheatresAsync();
+            await LoadViewData();
             return View();
         }
 
-        [HttpGet]
-        public async Task<JsonResult> GetScreensByTheatre(int theatreId)
-        {
-            var screens = await _screenService.GetScreensByTheatreIdAsync(theatreId);
-            var screenOptions = screens.Select(s => new { id = s.Id, name = s.Name }).ToList();
-            return Json(screenOptions);
-        }
-
+        // POST: /AdminShowtime/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(Showtime showtime)
         {
             if (!ModelState.IsValid)
             {
-                ViewBag.Movies = await _movieService.GetAllMoviesAsync();
-                ViewBag.Theatres = await _theatreService.GetAllTheatresAsync();
+                await LoadViewData();
                 return View(showtime);
             }
 
-            var screens = await _screenService.GetScreensByTheatreIdAsync(showtime.TheatreId);
-            if (!screens.Any(s => s.Id == showtime.ScreenId))
+            if (!await ValidateScreen(showtime))
             {
-                ModelState.AddModelError("ScreenId", "Phòng chiếu không hợp lệ cho rạp đã chọn.");
-                ViewBag.Movies = await _movieService.GetAllMoviesAsync();
-                ViewBag.Theatres = await _theatreService.GetAllTheatresAsync();
+                await LoadViewData();
                 return View(showtime);
             }
 
@@ -73,38 +66,33 @@ namespace Backend.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+        // GET: /AdminShowtime/Edit/{id}
         [HttpGet]
         public async Task<IActionResult> Edit(int id)
         {
             var showtime = await _showtimeService.GetShowtimeByIdAsync(id);
-            if (showtime == null)
-                return NotFound();
+            if (showtime == null) return NotFound();
 
-            ViewBag.Movies = await _movieService.GetAllMoviesAsync();
-            ViewBag.Theatres = await _theatreService.GetAllTheatresAsync();
+            await LoadViewData();
             return View(showtime);
         }
 
+        // POST: /AdminShowtime/Edit/{id}
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, Showtime showtime)
         {
-            if (id != showtime.Id)
-                return NotFound();
+            if (id != showtime.Id) return NotFound();
 
             if (!ModelState.IsValid)
             {
-                ViewBag.Movies = await _movieService.GetAllMoviesAsync();
-                ViewBag.Theatres = await _theatreService.GetAllTheatresAsync();
+                await LoadViewData();
                 return View(showtime);
             }
 
-            var screens = await _screenService.GetScreensByTheatreIdAsync(showtime.TheatreId);
-            if (!screens.Any(s => s.Id == showtime.ScreenId))
+            if (!await ValidateScreen(showtime))
             {
-                ModelState.AddModelError("ScreenId", "Phòng chiếu không hợp lệ cho rạp đã chọn.");
-                ViewBag.Movies = await _movieService.GetAllMoviesAsync();
-                ViewBag.Theatres = await _theatreService.GetAllTheatresAsync();
+                await LoadViewData();
                 return View(showtime);
             }
 
@@ -112,12 +100,45 @@ namespace Backend.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+        // POST: /AdminShowtime/Delete/{id}
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Delete(int id)
         {
+            var relatedBookings = await _bookingService.GetBookingsByShowtimeIdAsync(id);
+            if (relatedBookings.Any())
+            {
+                TempData["Error"] = "Không thể xóa suất chiếu vì đã có vé được đặt.";
+                return RedirectToAction(nameof(Index));
+            }
+
             await _showtimeService.DeleteShowtimeAsync(id);
             return RedirectToAction(nameof(Index));
+        }
+
+        // GET: /AdminShowtime/GetScreensByTheatre/{theatreId}
+        [HttpGet]
+        public async Task<JsonResult> GetScreensByTheatre(int theatreId)
+        {
+            var screens = await _screenService.GetScreensByTheatreIdAsync(theatreId);
+            return Json(screens.Select(s => new { id = s.Id, name = s.Name }));
+        }
+
+        private async Task<bool> ValidateScreen(Showtime showtime)
+        {
+            var screens = await _screenService.GetScreensByTheatreIdAsync(showtime.TheatreId);
+            if (!screens.Any(s => s.Id == showtime.ScreenId))
+            {
+                ModelState.AddModelError("ScreenId", "Phòng chiếu không hợp lệ cho rạp đã chọn.");
+                return false;
+            }
+            return true;
+        }
+
+        private async Task LoadViewData()
+        {
+            ViewBag.Movies = await _movieService.GetAllMoviesAsync();
+            ViewBag.Theatres = await _theatreService.GetAllTheatresAsync();
         }
     }
 }

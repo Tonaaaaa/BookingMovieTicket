@@ -1,41 +1,39 @@
 import 'package:flutter/material.dart';
-import 'package:video_player/video_player.dart';
+import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
 class TrailerScreen extends StatefulWidget {
   final String trailerUrl;
 
-  const TrailerScreen({required this.trailerUrl, Key? key}) : super(key: key);
+  const TrailerScreen({Key? key, required this.trailerUrl}) : super(key: key);
 
   @override
   _TrailerScreenState createState() => _TrailerScreenState();
 }
 
 class _TrailerScreenState extends State<TrailerScreen> {
-  VideoPlayerController? _controller;
-  bool _isInitialized = false;
+  late YoutubePlayerController _controller;
 
   @override
   void initState() {
     super.initState();
 
-    // Sử dụng URL từ server
-    _controller = VideoPlayerController.network(widget.trailerUrl)
-      ..initialize().then((_) {
-        setState(() {
-          _isInitialized = true;
-        });
-        _controller?.play(); // Tự động phát sau khi khởi tạo
-      }).catchError((error) {
-        debugPrint("Error initializing video: $error");
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text("Không thể phát trailer.")),
-        );
-      });
+    final videoId = YoutubePlayer.convertUrlToId(widget.trailerUrl);
+    if (videoId == null) {
+      throw Exception("URL không hợp lệ: ${widget.trailerUrl}");
+    }
+
+    _controller = YoutubePlayerController(
+      initialVideoId: videoId,
+      flags: const YoutubePlayerFlags(
+        autoPlay: true,
+        mute: false,
+      ),
+    );
   }
 
   @override
   void dispose() {
-    _controller?.dispose();
+    _controller.dispose();
     super.dispose();
   }
 
@@ -43,30 +41,25 @@ class _TrailerScreenState extends State<TrailerScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Trailer"),
+        title: const Text("Trailer", style: TextStyle(color: Colors.white)),
+        backgroundColor: Colors.black,
+        iconTheme: const IconThemeData(color: Colors.white),
       ),
-      body: _isInitialized && _controller != null
-          ? AspectRatio(
-              aspectRatio: _controller!.value.aspectRatio,
-              child: VideoPlayer(_controller!),
-            )
-          : const Center(child: CircularProgressIndicator()),
-      floatingActionButton: _isInitialized && _controller != null
-          ? FloatingActionButton(
-              onPressed: () {
-                setState(() {
-                  if (_controller!.value.isPlaying) {
-                    _controller!.pause();
-                  } else {
-                    _controller!.play();
-                  }
-                });
-              },
-              child: Icon(
-                _controller!.value.isPlaying ? Icons.pause : Icons.play_arrow,
-              ),
-            )
-          : null,
+      backgroundColor: Colors.black, // Đặt nền của Scaffold là màu đen
+      body: Center(
+        child: AspectRatio(
+          aspectRatio: 16 / 9, // Định dạng tỉ lệ video (YouTube sử dụng 16:9)
+          child: YoutubePlayer(
+            controller: _controller,
+            showVideoProgressIndicator: true,
+            progressIndicatorColor: Colors.red, // Màu của thanh tiến trình
+            progressColors: const ProgressBarColors(
+              playedColor: Colors.red,
+              handleColor: Colors.redAccent,
+            ),
+          ),
+        ),
+      ),
     );
   }
 }

@@ -1,3 +1,4 @@
+import 'package:bookingmovieticket/models/user_model.dart';
 import 'package:bookingmovieticket/pages/select_seat_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -7,11 +8,13 @@ import '../models/showtime.dart';
 class ShowtimeSelectorScreen extends StatefulWidget {
   final String theatreName;
   final int theatreId;
+  final UserModel user; // Thêm thông tin người dùng vào constructor
 
   const ShowtimeSelectorScreen({
     Key? key,
     required this.theatreName,
     required this.theatreId,
+    required this.user, // Thêm đối tượng user ở đây
   }) : super(key: key);
 
   @override
@@ -330,12 +333,24 @@ class _ShowtimeSelectorScreenState extends State<ShowtimeSelectorScreen> {
                 final endTime = formatTime(showtime.endTime);
                 return ElevatedButton(
                   onPressed: () {
-                    // Chuyển sang SeatSelectionPage
-                    Get.to(() => SeatSelectionPage(
-                          screenId: showtime.screenId,
-                          screenName: showtime.screen,
-                          theatreName: widget.theatreName,
-                        ));
+                    if (showtime.screen.id > 0) {
+                      Get.to(() => SeatSelectionPage(
+                            key: ValueKey(
+                                showtime.id), // Đảm bảo tái tạo lại widget
+                            screenId: showtime.screen.id,
+                            screenName:
+                                showtime.screen.name ?? "Không xác định",
+                            theatreName: widget.theatreName,
+                            showtime: showtime,
+                            selectedSeats: [],
+                            user: widget.user,
+                            format: showtime.format ?? "Không xác định",
+                          ));
+                    } else {
+                      print("Invalid Screen ID: ${showtime.screen.id}");
+                      // Hiển thị thông báo lỗi
+                      Get.snackbar("Lỗi", "Screen ID không hợp lệ");
+                    }
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.white,

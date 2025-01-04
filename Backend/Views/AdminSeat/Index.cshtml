@@ -1,5 +1,4 @@
-@model IEnumerable<Backend.Models.Seat>
-@using System.Text.Json
+@model IEnumerable<dynamic>
 
 <div class="container mt-4">
     <h2 class="text-center mb-4">Danh Sách Sơ Đồ Ghế</h2>
@@ -20,63 +19,24 @@
         <tbody>
             @foreach (var seat in Model)
             {
-                try
-                {
-                    // Deserialize sơ đồ ghế từ JSON
-                    var seatArrangement = JsonSerializer.Deserialize<List<List<Backend.Models.SeatDetail>>>(seat.Arrangement);
-
-                    // Tính toán thông tin ghế
-                    var regularPrice = seatArrangement?
-                        .SelectMany(row => row)
-                        .Where(s => s.Type == "Regular")
-                        .Select(s => s.AdditionalPrice)
-                        .DefaultIfEmpty(0m)
-                        .First();
-
-                    var vipPrice = seatArrangement?
-                        .SelectMany(row => row)
-                        .Where(s => s.Type == "VIP")
-                        .Select(s => s.AdditionalPrice)
-                        .DefaultIfEmpty(0m)
-                        .First();
-
-                    var couplePrice = seatArrangement?
-                        .SelectMany(row => row)
-                        .Where(s => s.Type == "Couple")
-                        .Select(s => s.AdditionalPrice)
-                        .DefaultIfEmpty(0m)
-                        .First();
-
-                    var totalSeats = seatArrangement?
-                        .SelectMany(row => row)
-                        .Count() ?? 0;
-
-                    <tr>
-                        <td>@seat.Id</td>
-                        <td>@(seat.Screen?.Theatre?.Name ?? "Không xác định")</td>
-                        <td>@(seat.Screen?.Name ?? "Không xác định")</td>
-                        <td>@totalSeats</td>
-                        <td>@string.Format("{0:C}", regularPrice)</td>
-                        <td>@string.Format("{0:C}", vipPrice)</td>
-                        <td>@string.Format("{0:C}", couplePrice)</td>
-                        <td>
-                            <button type="button" class="btn btn-info btn-sm" onclick="viewArrangement(@seat.Id)">
-                                Xem Sơ Đồ
-                            </button>
-                            <a href="/AdminSeat/Edit/@seat.Id" class="btn btn-warning btn-sm">Chỉnh Sửa</a>
-                            <button type="button" class="btn btn-danger btn-sm" onclick="showDeleteModal(@seat.Id)">
-                                Xóa
-                            </button>
-                        </td>
-                    </tr>
-                }
-                catch (Exception ex)
-                {
-                    // Hiển thị lỗi nếu xảy ra vấn đề trong xử lý JSON
-                    <tr>
-                        <td colspan="8" class="text-danger">Lỗi xử lý JSON: @ex.Message</td>
-                    </tr>
-                }
+                <tr>
+                    <td>@seat.Seat.Id</td>
+                    <td>@(seat.Seat.Screen?.Theatre?.Name ?? "Không xác định")</td>
+                    <td>@(seat.Seat.Screen?.Name ?? "Không xác định")</td>
+                    <td>@seat.TotalSeats</td>
+                    <td>@string.Format("{0:C}", seat.RegularPrice)</td>
+                    <td>@string.Format("{0:C}", seat.VipPrice)</td>
+                    <td>@string.Format("{0:C}", seat.CouplePrice)</td>
+                    <td>
+                        <button type="button" class="btn btn-info btn-sm" onclick="viewArrangement(@seat.Seat.Id)">
+                            Xem Sơ Đồ
+                        </button>
+                        <a href="/AdminSeat/Edit/@seat.Seat.Id" class="btn btn-warning btn-sm">Chỉnh Sửa</a>
+                        <button type="button" class="btn btn-danger btn-sm" onclick="showDeleteModal(@seat.Seat.Id)">
+                            Xóa
+                        </button>
+                    </td>
+                </tr>
             }
         </tbody>
     </table>
@@ -128,6 +88,7 @@
 
 @section Scripts {
     <script>
+        // Hiển thị sơ đồ ghế
         function viewArrangement(seatId) {
             fetch(`/AdminSeat/GetSeatArrangement?seatId=${seatId}`)
                 .then(response => {
@@ -142,6 +103,7 @@
                 .catch(err => console.error('Không thể tải sơ đồ ghế:', err));
         }
 
+        // Render sơ đồ ghế
         function renderSeatArrangement(data, containerId) {
             const seatPreview = document.getElementById(containerId);
             seatPreview.innerHTML = '';
@@ -178,6 +140,7 @@
             });
         }
 
+        // Hiển thị modal xác nhận xóa
         function showDeleteModal(seatId) {
             const deleteForm = document.getElementById('deleteForm');
             deleteForm.action = `/AdminSeat/Delete/${seatId}`;
@@ -243,14 +206,6 @@
             height: 5px;
             background-color: #444;
             margin: 0 auto;
-        }
-
-        .screen-line p {
-            font-size: 1rem;
-            font-weight: bold;
-            text-align: center;
-            color: #444;
-            margin-top: -15px;
         }
     </style>
 }

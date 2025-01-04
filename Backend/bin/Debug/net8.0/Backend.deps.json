@@ -8,13 +8,16 @@
     ".NETCoreApp,Version=v8.0": {
       "Backend/1.0.0": {
         "dependencies": {
+          "Google.Apis.Auth": "1.68.0",
           "Google.Cloud.Firestore": "3.9.0",
           "Microsoft.AspNetCore.SignalR": "1.1.0",
           "Microsoft.EntityFrameworkCore": "8.0.2",
           "Microsoft.EntityFrameworkCore.Design": "8.0.2",
           "Microsoft.EntityFrameworkCore.Relational": "8.0.2",
           "Microsoft.EntityFrameworkCore.Tools": "8.0.2",
+          "Newtonsoft.Json": "13.0.3",
           "Pomelo.EntityFrameworkCore.MySql": "8.0.2",
+          "RestSharp": "112.1.0",
           "Swashbuckle.AspNetCore": "7.0.0",
           "System.ComponentModel.Annotations": "5.0.0",
           "System.Text.Json": "9.0.0"
@@ -760,6 +763,14 @@
           "lib/net8.0/Pomelo.EntityFrameworkCore.MySql.dll": {
             "assemblyVersion": "8.0.2.0",
             "fileVersion": "8.0.2.0"
+          }
+        }
+      },
+      "RestSharp/112.1.0": {
+        "runtime": {
+          "lib/net8.0/RestSharp.dll": {
+            "assemblyVersion": "112.1.0.0",
+            "fileVersion": "112.1.0.0"
           }
         }
       },
@@ -1530,6 +1541,13 @@
       "sha512": "sha512-XjnlcxVBLnEMbyEc5cZzgZeDyLvAniACZQ04W1slWN0f4rmfNzl98gEMvHnFH0fMDF06z9MmgGi/Sr7hJ+BVnw==",
       "path": "pomelo.entityframeworkcore.mysql/8.0.2",
       "hashPath": "pomelo.entityframeworkcore.mysql.8.0.2.nupkg.sha512"
+    },
+    "RestSharp/112.1.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-bOUGNZqhhv/QeCXHTKEUil846yBjwWXpzPKjO67kFvaAOoF361z7jLY5BMnuZ6WD2WQRA750sNMcK7MSPCQ5Mg==",
+      "path": "restsharp/112.1.0",
+      "hashPath": "restsharp.112.1.0.nupkg.sha512"
     },
     "Swashbuckle.AspNetCore/7.0.0": {
       "type": "package",

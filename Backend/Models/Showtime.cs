@@ -38,5 +38,7 @@ namespace Backend.Models
 
         [Column(TypeName = "decimal(5, 2)")]
         public decimal? PriceModifier { get; set; }
+
+        public ICollection<Seat>? Seats { get; set; } // Liên kết với Seat
     }
 }

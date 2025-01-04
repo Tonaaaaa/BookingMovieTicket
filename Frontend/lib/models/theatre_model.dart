@@ -14,38 +14,34 @@ class Theatre {
     required this.name,
     required this.fullAddress,
     this.coordinates,
-    required this.facilities,
-    required this.availableScreens,
+    this.facilities = const [], // Cung cấp giá trị mặc định là mảng rỗng
+    this.availableScreens = const [], // Cung cấp giá trị mặc định là mảng rỗng
     this.contactNumber,
     this.city,
     this.imageUrl,
   });
 
   factory Theatre.fromJson(Map<String, dynamic> json) {
-    String? baseUrl = "http://10.0.2.2:5130";
-    String? imageUrl = json['ImageUrl'] != null
-        ? Uri.parse(baseUrl).resolve(json['ImageUrl']).toString()
-        : null;
-
-    final facilities = (json['FacilityList'] as List?)
-            ?.map((e) => e.toString().trim())
-            .toList() ??
-        [];
-    final availableScreens = (json['AvailableScreensList'] as List?)
-            ?.map((e) => e.toString().trim())
-            .toList() ??
-        [];
+    const String baseUrl = "http://10.0.2.2:5130";
 
     return Theatre(
-      id: json['Id'],
+      id: json['Id'] ?? 0,
       name: json['Name'] ?? 'Unknown',
       fullAddress: json['FullAddress'] ?? '',
       coordinates: json['Coordinates'],
-      facilities: facilities,
-      availableScreens: availableScreens,
+      facilities: (json['FacilityList'] as List?)
+              ?.map((e) => e.toString().trim())
+              .toList() ??
+          [],
+      availableScreens: (json['AvailableScreensList'] as List?)
+              ?.map((e) => e.toString().trim())
+              .toList() ??
+          [],
       contactNumber: json['ContactNumber'],
       city: json['City'],
-      imageUrl: imageUrl,
+      imageUrl: json['ImageUrl'] != null
+          ? Uri.parse(baseUrl).resolve(json['ImageUrl']).toString()
+          : null,
     );
   }
 

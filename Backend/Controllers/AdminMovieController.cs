@@ -38,14 +38,7 @@ namespace Backend.Controllers
         // Tạo phim mới (POST)
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(
-            Movie movie,
-            List<int> actorIds,
-            IFormFile PosterFile,
-            IFormFile TrailerFile,
-            List<string> Formats,
-            List<string> LanguagesAvailable,
-            string AgeRating)
+        public async Task<IActionResult> Create(Movie movie, List<int> actorIds, IFormFile PosterFile, List<string> Formats, List<string> LanguagesAvailable, string AgeRating)
         {
             if (!ModelState.IsValid)
             {
@@ -53,37 +46,39 @@ namespace Backend.Controllers
                 return View(movie);
             }
 
-            var uploadPath = Path.Combine(_webHostEnvironment.WebRootPath, "uploads");
-            if (!Directory.Exists(uploadPath)) Directory.CreateDirectory(uploadPath);
-
-            // Upload Poster
-            if (PosterFile != null && PosterFile.Length > 0)
+            try
             {
-                var posterPath = Path.Combine(uploadPath, Path.GetFileName(PosterFile.FileName));
-                using (var stream = new FileStream(posterPath, FileMode.Create))
-                {
-                    await PosterFile.CopyToAsync(stream);
-                }
-                movie.BannerUrl = $"/uploads/{Path.GetFileName(PosterFile.FileName)}";
-            }
+                var uploadPath = Path.Combine(_webHostEnvironment.WebRootPath, "uploads");
+                if (!Directory.Exists(uploadPath)) Directory.CreateDirectory(uploadPath);
 
-            // Upload Trailer
-            if (TrailerFile != null && TrailerFile.Length > 0)
+                // Upload Poster
+                if (PosterFile != null && PosterFile.Length > 0)
+                {
+                    var posterPath = Path.Combine(uploadPath, Path.GetFileName(PosterFile.FileName));
+                    using (var stream = new FileStream(posterPath, FileMode.Create))
+                    {
+                        await PosterFile.CopyToAsync(stream);
+                    }
+                    movie.BannerUrl = $"/uploads/{Path.GetFileName(PosterFile.FileName)}";
+                }
+
+                // Gán thêm các thuộc tính khác
+                movie.Formats = Formats;
+                movie.LanguagesAvailable = LanguagesAvailable;
+                movie.AgeRating = AgeRating;
+
+                // Lưu phim vào cơ sở dữ liệu
+                await _movieService.AddMovieAsync(movie, actorIds);
+
+                TempData["SuccessMessage"] = "Phim được tạo thành công.";
+                return RedirectToAction(nameof(Index));
+            }
+            catch
             {
-                var trailerPath = Path.Combine(uploadPath, Path.GetFileName(TrailerFile.FileName));
-                using (var stream = new FileStream(trailerPath, FileMode.Create))
-                {
-                    await TrailerFile.CopyToAsync(stream);
-                }
-                movie.TrailerUrl = $"/uploads/{Path.GetFileName(TrailerFile.FileName)}";
+                ModelState.AddModelError(string.Empty, "Có lỗi xảy ra khi tạo phim.");
+                ViewBag.Actors = await _actorService.GetAllActorsAsync();
+                return View(movie);
             }
-
-            movie.Formats = Formats;
-            movie.LanguagesAvailable = LanguagesAvailable;
-            movie.AgeRating = AgeRating;
-
-            await _movieService.AddMovieAsync(movie, actorIds);
-            return RedirectToAction(nameof(Index));
         }
 
         // Chỉnh sửa phim (GET)
@@ -101,15 +96,7 @@ namespace Backend.Controllers
         // Chỉnh sửa phim (POST)
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(
-            int id,
-            Movie movie,
-            List<int> actorIds,
-            IFormFile PosterFile,
-            IFormFile TrailerFile,
-            List<string> Formats,
-            List<string> LanguagesAvailable,
-            string AgeRating)
+        public async Task<IActionResult> Edit(int id, Movie movie, List<int> actorIds, IFormFile PosterFile, List<string> Formats, List<string> LanguagesAvailable, string AgeRating)
         {
             if (id != movie.Id)
                 return NotFound();
@@ -121,37 +108,39 @@ namespace Backend.Controllers
                 return View(movie);
             }
 
-            var uploadPath = Path.Combine(_webHostEnvironment.WebRootPath, "uploads");
-            if (!Directory.Exists(uploadPath)) Directory.CreateDirectory(uploadPath);
-
-            // Upload Poster
-            if (PosterFile != null && PosterFile.Length > 0)
+            try
             {
-                var posterPath = Path.Combine(uploadPath, Path.GetFileName(PosterFile.FileName));
-                using (var stream = new FileStream(posterPath, FileMode.Create))
-                {
-                    await PosterFile.CopyToAsync(stream);
-                }
-                movie.BannerUrl = $"/uploads/{Path.GetFileName(PosterFile.FileName)}";
-            }
+                var uploadPath = Path.Combine(_webHostEnvironment.WebRootPath, "uploads");
+                if (!Directory.Exists(uploadPath)) Directory.CreateDirectory(uploadPath);
 
-            // Upload Trailer
-            if (TrailerFile != null && TrailerFile.Length > 0)
+                // Upload Poster
+                if (PosterFile != null && PosterFile.Length > 0)
+                {
+                    var posterPath = Path.Combine(uploadPath, Path.GetFileName(PosterFile.FileName));
+                    using (var stream = new FileStream(posterPath, FileMode.Create))
+                    {
+                        await PosterFile.CopyToAsync(stream);
+                    }
+                    movie.BannerUrl = $"/uploads/{Path.GetFileName(PosterFile.FileName)}";
+                }
+
+                // Gán thêm các thuộc tính khác
+                movie.Formats = Formats;
+                movie.LanguagesAvailable = LanguagesAvailable;
+                movie.AgeRating = AgeRating;
+
+                // Cập nhật phim vào cơ sở dữ liệu
+                await _movieService.UpdateMovieAsync(movie, actorIds);
+
+                TempData["SuccessMessage"] = "Cập nhật phim thành công.";
+                return RedirectToAction(nameof(Index));
+            }
+            catch
             {
-                var trailerPath = Path.Combine(uploadPath, Path.GetFileName(TrailerFile.FileName));
-                using (var stream = new FileStream(trailerPath, FileMode.Create))
-                {
-                    await TrailerFile.CopyToAsync(stream);
-                }
-                movie.TrailerUrl = $"/uploads/{Path.GetFileName(TrailerFile.FileName)}";
+                ModelState.AddModelError(string.Empty, "Có lỗi xảy ra khi chỉnh sửa phim.");
+                ViewBag.Actors = await _actorService.GetAllActorsAsync();
+                return View(movie);
             }
-
-            movie.Formats = Formats;
-            movie.LanguagesAvailable = LanguagesAvailable;
-            movie.AgeRating = AgeRating;
-
-            await _movieService.UpdateMovieAsync(movie, actorIds);
-            return RedirectToAction(nameof(Index));
         }
 
         // Xóa phim
@@ -159,8 +148,17 @@ namespace Backend.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Delete(int id)
         {
-            await _movieService.DeleteMovieAsync(id);
-            return RedirectToAction(nameof(Index));
+            try
+            {
+                await _movieService.DeleteMovieAsync(id);
+                TempData["SuccessMessage"] = "Xóa phim thành công.";
+                return RedirectToAction(nameof(Index));
+            }
+            catch
+            {
+                TempData["ErrorMessage"] = "Có lỗi xảy ra khi xóa phim.";
+                return RedirectToAction(nameof(Index));
+            }
         }
     }
 }

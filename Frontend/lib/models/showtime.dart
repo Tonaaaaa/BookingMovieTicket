@@ -1,69 +1,71 @@
 import 'package:bookingmovieticket/models/movie_model.dart';
+import 'package:bookingmovieticket/models/screen_model.dart';
+import 'package:bookingmovieticket/models/theatre_model.dart';
 
 class Showtime {
   final int id;
-  final int movieId;
-  final int theatreId;
-  final String screen;
+  final Movie movie;
+  final Theatre theatre;
+  final Screen screen;
   final DateTime startTime;
   final DateTime endTime;
-  final String format;
-  final String showType;
-  final int seatCapacity;
-  final double ticketPrice;
   final String status;
-  final int screenId;
-  final Movie? movie;
+  final double ticketPrice;
+  final String? format; // Định dạng có thể null
+  final List<String>? languagesAvailable; // Có thể null
+  final double? priceModifier; // Giá bổ sung có thể null
 
   Showtime({
     required this.id,
-    required this.movieId,
-    required this.theatreId,
+    required this.movie,
+    required this.theatre,
     required this.screen,
     required this.startTime,
     required this.endTime,
-    required this.format,
-    required this.showType,
-    required this.seatCapacity,
-    required this.ticketPrice,
     required this.status,
-    required this.screenId,
-    this.movie,
+    required this.ticketPrice,
+    this.format,
+    this.languagesAvailable,
+    this.priceModifier,
   });
 
   factory Showtime.fromJson(Map<String, dynamic> json) {
-    return Showtime(
-      id: json['Id'] ?? 0,
-      movieId: json['MovieId'] ?? 0,
-      theatreId: json['TheatreId'] ?? 0,
-      screen: json['Screen'] ?? 'N/A',
-      startTime: DateTime.tryParse(json['StartTime'] ?? '') ?? DateTime.now(),
-      endTime: DateTime.tryParse(json['EndTime'] ?? '') ?? DateTime.now(),
-      format: json['Format'] ?? 'Unknown',
-      showType: json['ShowType'] ?? 'Unknown',
-      seatCapacity: json['SeatCapacity'] ?? 0,
-      ticketPrice: (json['TicketPrice'] as num?)?.toDouble() ?? 0.0,
-      status: json['Status'] ?? 'Inactive',
-      screenId: json['ScreenId'] ?? 0,
-      movie: json['Movie'] != null ? Movie.fromJson(json['Movie']) : null,
-    );
+    try {
+      print("Parsing Showtime JSON: $json"); // Debugging
+      return Showtime(
+        id: (json['Id'] as int?) ?? 0,
+        movie: Movie.fromJson(json['Movie'] ?? {}),
+        theatre: Theatre.fromJson(json['Theatre'] ?? {}),
+        screen: Screen.fromJson(json['Screen'] ?? {}),
+        startTime: DateTime.tryParse(json['StartTime'] ?? '') ?? DateTime.now(),
+        endTime: DateTime.tryParse(json['EndTime'] ?? '') ?? DateTime.now(),
+        status: json['Status'] ?? 'Inactive',
+        ticketPrice: (json['TicketPrice'] as num?)?.toDouble() ?? 0.0,
+        format: json['Format'],
+        languagesAvailable: json['LanguagesAvailable'] != null
+            ? List<String>.from(json['LanguagesAvailable'])
+            : null,
+        priceModifier: (json['PriceModifier'] as num?)?.toDouble(),
+      );
+    } catch (e) {
+      print("Error parsing Showtime: $e");
+      rethrow;
+    }
   }
 
   Map<String, dynamic> toJson() {
     return {
       'Id': id,
-      'MovieId': movieId,
-      'TheatreId': theatreId,
-      'Screen': screen,
+      'Movie': movie.toJson(),
+      'Theatre': theatre.toJson(),
+      'Screen': screen.toJson(),
       'StartTime': startTime.toIso8601String(),
       'EndTime': endTime.toIso8601String(),
-      'Format': format,
-      'ShowType': showType,
-      'SeatCapacity': seatCapacity,
-      'TicketPrice': ticketPrice,
       'Status': status,
-      'ScreenId': screenId,
-      'Movie': movie?.toJson(),
+      'TicketPrice': ticketPrice,
+      'Format': format,
+      'LanguagesAvailable': languagesAvailable,
+      'PriceModifier': priceModifier,
     };
   }
 }

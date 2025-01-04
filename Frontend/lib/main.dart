@@ -15,7 +15,7 @@ void main() async {
   await Firebase.initializeApp();
 
   // Initialize your controllers
-  Get.put(AuthController());
+  Get.put<AuthController>(AuthController());
   Get.put(LocationController());
   Get.put(CommonController());
   Get.put(MovieController());

@@ -3,6 +3,7 @@ using Backend.Models;
 using Backend.Services;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Backend.Repositories
@@ -18,20 +19,30 @@ namespace Backend.Repositories
 
         public async Task<List<Seat>> GetAllSeatsAsync()
         {
-           return await _context.Seats
-        .Include(s => s.Screen)
-        .ThenInclude(screen => screen.Theatre) // Bao gồm thông tin Rạp
-        .ToListAsync();
+            return await _context.Seats
+                .Include(s => s.Screen) // Tải quan hệ Screen
+                .ThenInclude(screen => screen.Theatre) // Tải thêm Theatre từ Screen
+                .ToListAsync();
         }
 
-        public async Task<Seat?> GetSeatByScreenIdAsync(int screenId)
+        public async Task<List<Seat>> GetSeatsByScreenIdAsync(int screenId)
         {
-            return await _context.Seats.AsNoTracking().FirstOrDefaultAsync(s => s.ScreenId == screenId);
+            return await _context.Seats.Where(s => s.ScreenId == screenId).ToListAsync();
+        }
+
+        public async Task<List<Seat>> GetSeatsByScreenAndShowtimeAsync(int screenId, int showtimeId)
+        {
+            return await _context.Seats
+                .Where(seat => seat.ScreenId == screenId)
+                .ToListAsync();
         }
 
         public async Task<Seat?> GetSeatByIdAsync(int id)
         {
-            return await _context.Seats.Include(s => s.Screen).FirstOrDefaultAsync(s => s.Id == id);
+            return await _context.Seats
+                .Include(s => s.Screen) // Tải Screen
+                .ThenInclude(screen => screen.Theatre) // Tải Theatre từ Screen
+                .FirstOrDefaultAsync(s => s.Id == id);
         }
 
         public async Task AddSeatAsync(Seat seat)
@@ -61,9 +72,10 @@ namespace Backend.Repositories
             }
         }
 
-        public Task BulkAddSeatsAsync(List<Seat> seats)
+        public async Task BulkAddSeatsAsync(List<Seat> seats)
         {
-            throw new NotImplementedException();
+            _context.Seats.AddRange(seats);
+            await _context.SaveChangesAsync();
         }
     }
 }

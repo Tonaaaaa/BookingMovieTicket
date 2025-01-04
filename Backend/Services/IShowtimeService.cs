@@ -11,5 +11,6 @@ namespace Backend.Services
         Task AddShowtimeAsync(Showtime showtime);
         Task UpdateShowtimeAsync(Showtime showtime);
         Task DeleteShowtimeAsync(int id);
+        Task<List<Showtime>> GetShowtimesByScreenIdAsync(int screenId);
     }
 }

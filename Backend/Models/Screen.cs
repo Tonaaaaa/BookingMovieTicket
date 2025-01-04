@@ -15,9 +15,6 @@ namespace Backend.Models
         public int TheatreId { get; set; } // Thuộc rạp nào
         public Theatre Theatre { get; set; } = null!;
 
-        [Required]
-        public int SeatCapacity { get; set; } = 100; // Số lượng ghế
-
         public ICollection<Showtime> Showtimes { get; set; } = new List<Showtime>();
     }
 }

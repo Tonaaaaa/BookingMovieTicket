@@ -43,6 +43,10 @@
         "net8.0": {
           "targetAlias": "net8.0",
           "dependencies": {
+            "Google.Apis.Auth": {
+              "target": "Package",
+              "version": "[1.68.0, )"
+            },
             "Google.Cloud.Firestore": {
               "target": "Package",
               "version": "[3.9.0, )"
@@ -71,9 +75,17 @@
               "target": "Package",
               "version": "[8.0.2, )"
             },
+            "Newtonsoft.Json": {
+              "target": "Package",
+              "version": "[13.0.3, )"
+            },
             "Pomelo.EntityFrameworkCore.MySql": {
               "target": "Package",
               "version": "[8.0.2, )"
+            },
+            "RestSharp": {
+              "target": "Package",
+              "version": "[112.1.0, )"
             },
             "Swashbuckle.AspNetCore": {
               "target": "Package",

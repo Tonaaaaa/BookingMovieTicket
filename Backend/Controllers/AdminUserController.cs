@@ -1,32 +1,25 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Backend.Models;
-
 using Google.Cloud.Firestore;
 
 namespace Backend.Controllers
 {
     public class AdminUserController : Controller
     {
-
         private readonly FirestoreDb _firestoreDb;
 
         public AdminUserController()
         {
-            // Khởi tạo Firebase Client
-
-            // _firestoreDb = FirestoreDb.Create("movieticketapp-d914f");
-
-            // Đặt biến môi trường GOOGLE_APPLICATION_CREDENTIALS
-            var credentialPath = @"E:\DACN\movieticketapp-d914f-834f7e229052.json";
+            // Đặt đường dẫn tới file JSON
+            var credentialPath = @"C:\Users\tranv\Downloads\DACN\movieticketapp-d914f-firebase-adminsdk-2m0f8-77e4dbba83.json";
             Environment.SetEnvironmentVariable("GOOGLE_APPLICATION_CREDENTIALS", credentialPath);
 
             // Tạo kết nối với Firestore
             _firestoreDb = FirestoreDb.Create("movieticketapp-d914f");
             Console.WriteLine($"Connected to Firestore project: {_firestoreDb.ProjectId}");
-
         }
-        // GET: AdminUser
 
+        // GET: AdminUser
         public async Task<IActionResult> Index()
         {
             // Lấy danh sách người dùng từ Firestore
@@ -39,7 +32,7 @@ namespace Backend.Controllers
                 var user = new User
                 {
                     UserId = document.Id, // Lấy Id của document
-                    Username = document.GetValue<string>("username"), // Lấy trường username (viết thường)
+                    Username = document.GetValue<string>("username"), // Lấy trường username
                     Role = document.GetValue<string>("role"),         // Lấy trường role
                     Phone = document.GetValue<string>("phone"),       // Lấy trường phone
                     Email = document.GetValue<string>("email")        // Lấy trường email
@@ -49,6 +42,7 @@ namespace Backend.Controllers
 
             return View(users);
         }
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Delete(string id)
@@ -68,12 +62,5 @@ namespace Backend.Controllers
                 return RedirectToAction(nameof(Index), new { error = "Unable to delete user." });
             }
         }
-
-
-
-
-
-
-
     }
 }

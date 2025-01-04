@@ -46,6 +46,89 @@ namespace Backend.Migrations
                     b.ToTable("Actors");
                 });
 
+            modelBuilder.Entity("Backend.Models.Booking", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("PaymentMethod")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("PaymentProviderData")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("PaymentTransactionId")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("PaymentUrl")
+                        .HasColumnType("longtext");
+
+                    b.Property<int>("ShowtimeId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<decimal>("TotalPrice")
+                        .HasColumnType("decimal(10, 2)");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("varchar(255)");
+
+                    b.Property<string>("ZaloPayTransToken")
+                        .HasColumnType("longtext");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ShowtimeId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Bookings");
+                });
+
+            modelBuilder.Entity("Backend.Models.Comment", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Content")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<int>("MovieId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("Username")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Comments");
+                });
+
             modelBuilder.Entity("Backend.Models.Movie", b =>
                 {
                     b.Property<int>("Id")
@@ -132,9 +215,6 @@ namespace Backend.Migrations
                         .IsRequired()
                         .HasColumnType("longtext");
 
-                    b.Property<int>("SeatCapacity")
-                        .HasColumnType("int");
-
                     b.Property<int>("TheatreId")
                         .HasColumnType("int");
 
@@ -160,11 +240,57 @@ namespace Backend.Migrations
                     b.Property<int>("ScreenId")
                         .HasColumnType("int");
 
+                    b.Property<int?>("ShowtimeId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
                     b.HasIndex("ScreenId");
 
+                    b.HasIndex("ShowtimeId");
+
                     b.ToTable("Seats");
+                });
+
+            modelBuilder.Entity("Backend.Models.SeatDetail", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<decimal>("AdditionalPrice")
+                        .HasColumnType("decimal(65,30)")
+                        .HasAnnotation("Relational:JsonPropertyName", "additionalPrice");
+
+                    b.Property<int?>("BookingId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("LinkedSeatNumber")
+                        .HasColumnType("longtext")
+                        .HasAnnotation("Relational:JsonPropertyName", "linkedSeatNumber");
+
+                    b.Property<string>("SeatNumber")
+                        .IsRequired()
+                        .HasColumnType("longtext")
+                        .HasAnnotation("Relational:JsonPropertyName", "seatNumber");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasColumnType("longtext")
+                        .HasAnnotation("Relational:JsonPropertyName", "status");
+
+                    b.Property<string>("Type")
+                        .IsRequired()
+                        .HasColumnType("longtext")
+                        .HasAnnotation("Relational:JsonPropertyName", "type");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("BookingId");
+
+                    b.ToTable("SeatDetails");
                 });
 
             modelBuilder.Entity("Backend.Models.Showtime", b =>
@@ -208,6 +334,46 @@ namespace Backend.Migrations
                     b.ToTable("Showtimes");
                 });
 
+            modelBuilder.Entity("Backend.Models.SnackPackage", b =>
+                {
+                    b.Property<Guid>("SnackPackageId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("char(36)");
+
+                    b.Property<int?>("BookingId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("ImageUrl")
+                        .HasMaxLength(255)
+                        .HasColumnType("varchar(255)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("varchar(100)");
+
+                    b.Property<decimal>("Price")
+                        .HasColumnType("decimal(65,30)");
+
+                    b.Property<int>("Quantity")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.HasKey("SnackPackageId");
+
+                    b.HasIndex("BookingId");
+
+                    b.ToTable("SnackPackages");
+                });
+
             modelBuilder.Entity("Backend.Models.Theatre", b =>
                 {
                     b.Property<int>("Id")
@@ -249,6 +415,58 @@ namespace Backend.Migrations
                     b.ToTable("Theatres");
                 });
 
+            modelBuilder.Entity("Backend.Models.User", b =>
+                {
+                    b.Property<string>("UserId")
+                        .HasColumnType("varchar(255)");
+
+                    b.Property<string>("AvatarUrl")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("Phone")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("Role")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("Username")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.HasKey("UserId");
+
+                    b.ToTable("Users");
+                });
+
+            modelBuilder.Entity("Backend.Models.Booking", b =>
+                {
+                    b.HasOne("Backend.Models.Showtime", "Showtime")
+                        .WithMany()
+                        .HasForeignKey("ShowtimeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Backend.Models.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Showtime");
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("Backend.Models.MovieActor", b =>
                 {
                     b.HasOne("Backend.Models.Actor", "Actor")
@@ -287,7 +505,18 @@ namespace Backend.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("Backend.Models.Showtime", null)
+                        .WithMany("Seats")
+                        .HasForeignKey("ShowtimeId");
+
                     b.Navigation("Screen");
+                });
+
+            modelBuilder.Entity("Backend.Models.SeatDetail", b =>
+                {
+                    b.HasOne("Backend.Models.Booking", null)
+                        .WithMany("Seats")
+                        .HasForeignKey("BookingId");
                 });
 
             modelBuilder.Entity("Backend.Models.Showtime", b =>
@@ -317,9 +546,23 @@ namespace Backend.Migrations
                     b.Navigation("Theatre");
                 });
 
+            modelBuilder.Entity("Backend.Models.SnackPackage", b =>
+                {
+                    b.HasOne("Backend.Models.Booking", null)
+                        .WithMany("Snacks")
+                        .HasForeignKey("BookingId");
+                });
+
             modelBuilder.Entity("Backend.Models.Actor", b =>
                 {
                     b.Navigation("MovieActors");
+                });
+
+            modelBuilder.Entity("Backend.Models.Booking", b =>
+                {
+                    b.Navigation("Seats");
+
+                    b.Navigation("Snacks");
                 });
 
             modelBuilder.Entity("Backend.Models.Movie", b =>
@@ -332,6 +575,11 @@ namespace Backend.Migrations
             modelBuilder.Entity("Backend.Models.Screen", b =>
                 {
                     b.Navigation("Showtimes");
+                });
+
+            modelBuilder.Entity("Backend.Models.Showtime", b =>
+                {
+                    b.Navigation("Seats");
                 });
 
             modelBuilder.Entity("Backend.Models.Theatre", b =>
